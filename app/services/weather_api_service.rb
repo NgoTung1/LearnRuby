@@ -1,7 +1,8 @@
 require 'json'
 require 'net/http'
 class WeatherApiService
-    url = https://api.openweathermap.org/data/2.5/weather
+    url = "https://api.openweathermap.org/data/2.5/weather"
+    bulk_url = "api.openweathermap.org/data/2.5//find?lat=16.1667&lon=107.8333&cnt=10"
 
     def initialize(city_name)
         @city_name = city_name
@@ -19,4 +20,14 @@ class WeatherApiService
         }
     end
 end
+    def multiple_call
+        uri = URI("#{bulk_url}")
+        response = Net::HTTP.get_response(uri)
+        if response.is_a?(Net::HTTPSuccess)
+            data = JSON.parse(response.data)
+        else 
+            {
+                success: false,
+                error: "Lỗi không thể hiển thị"
+            }
 end
