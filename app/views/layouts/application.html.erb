@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Weather on Rails</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+    
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+  </head>
+
+  <body>
+    <% if notice %>
+      <div style="background: #d4edda; color: #155724; padding: 10px; text-align: center;"><%= notice %></div>
+    <% end %>
+    <% if alert %>
+      <div style="background: #f8d7da; color: #721c24; padding: 10px; text-align: center;"><%= alert %></div>
+    <% end %>
+
+    <%= yield :extra_css %>
+  </body>
+</html>
