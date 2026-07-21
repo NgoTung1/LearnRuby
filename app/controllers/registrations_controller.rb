@@ -5,9 +5,12 @@ class RegistrationsController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    
+  
     if @user.save
-      redirect_to login_path, notice: "Tạo tài khoản thành công! Vui lòng đăng nhập."
+      @user.generate_otp!
+      session[:registration_user_id] = @user.id
+      
+      redirect_to otp_path, notice: "Đăng ký thành công! Vui lòng kiểm tra email để lấy mã OTP."
     else
       render :new
     end
