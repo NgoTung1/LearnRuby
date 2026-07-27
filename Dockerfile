@@ -11,6 +11,7 @@ COPY Gemfile.lock /myapp/Gemfile.lock
 RUN bundle install
 
 COPY entrypoint.sh /usr/bin/
+RUN sed -i 's/\r$//' /usr/bin/entrypoint.sh
 RUN chmod +x /usr/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
 EXPOSE 3000
