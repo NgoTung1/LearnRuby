@@ -3,8 +3,10 @@ Rails.application.routes.draw do
   root 'weather#index'
   get 'register', to: 'registrations#new'
   post 'register', to: 'registrations#create'
-  get 'register/otp', to: 'otps#new' as: 'otp'
-  post 'register/otp', to: 'otps#create' as: 'otp'
+  post 'register/google', to: 'registration#create_google'
+  get 'register/otp', to: 'otps#new', as: 'otp'
+  post 'register/otp', to: 'otps#create', as: 'create_otp'
+  post 'register/otp/resend', to: 'otps#resend', as: 'resend_otp'
 
   get 'login', to: 'sessions#new' 
   post 'login', to: 'sessions#save'

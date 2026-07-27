@@ -5,7 +5,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= yield :extra_css %>
   </head>
 
   <body>
@@ -16,6 +16,6 @@
       <div style="background: #f8d7da; color: #721c24; padding: 10px; text-align: center;"><%= alert %></div>
     <% end %>
 
-    <%= yield :extra_css %>
+    <%= yield %>
   </body>
 </html>

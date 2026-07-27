@@ -12,4 +12,8 @@ class User < ApplicationRecord
     def check_otp?(code)
         otp_code == code && otp_expires_at.present? && otp_expires_at > Time.current
     end
+
+    def resend_otp?
+        otp_expires_at.nil? || Time.current >= otp_expires_at - 8.minutes
+    end
 end

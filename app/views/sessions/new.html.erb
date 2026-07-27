@@ -1,9 +1,48 @@
 <% content_for :extra_css do %>
-  <link rel="stylesheet" href="/auth.css">
+  <%= stylesheet_link_tag 'auth', media: 'all' %>
 <% end %>
 
- <div class ="login">
-        <h1>Đăng nhập </h1>
-        <h2> Chào mừng bạn quay trở lại </h2>
-        
- </div>
+<div class="login-container">
+  <div class="login-box">
+    <div class="login-header">
+      <h1>Đăng nhập</h1>
+      <h2>Chào mừng bạn quay trở lại</h2>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+    <% if flash[:notice] %>
+      <div class="alert alert-success">
+        <%= flash[:notice] %>
+      </div>
+    <% end %>
+
+    <%= form_with(url: login_path, local: true, class: "login-form") do |f| %>
+      
+      <div class="form-group">
+        <%= f.label :email, "Email", class: "form-label" %>
+        <%= f.email_field :email, class: "form-input", placeholder: "Nhập email của bạn", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, "Mật khẩu", class: "form-label" %>
+        <%= f.password_field :password, class: "form-input", placeholder: "Nhập mật khẩu", required: true %>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Đăng nhập", class: "btn-submit" %>
+      </div>
+      <div class="divider">
+       <span> hoặc </span>
+      </div>
+      <div class="form-footer">
+        <p>Chưa có tài khoản? <%= link_to "Đăng ký", register_path %></p>
+        <p>Đăng nhập bằng <%= link_to "Google", "/register/google", method: :post %></p>
+      </div>
+      
+    <% end %>
+  </div>
+</div>

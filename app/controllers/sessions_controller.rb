@@ -6,7 +6,6 @@ class SessionsController < ApplicationController
         if user.authenticate(params[:password])
             if (user.is_verified? == false) 
                 redirect_to otp_path
-            
             else 
             cookies.encrypted[:user_id] = {
                 value: user.id,

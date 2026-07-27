@@ -13,7 +13,7 @@ RUN echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.l
 - Trong file Gemfile, thêm gem 'concurrent-ruby', '1.3.4' cùng gem 'ffi', '1.15.5' vào cuối cùng để sửa lỗi xung đột phiên bản của Rails 6.
 - Tạo file Gemfile.lock rỗng để sau khi khởi tạo nó sẽ lưu các phiên bản và thư viện đã tải về trong đó
 - Tạo file entrypoint.sh để tự động xóa các file pid khi Docker build fail
-
+(Các file này đã có sẵn trong project, nên có thể bỏ qua bước này)
 # Sau khi tạo và viết các lệnh, chạy lần lượt các câu lẹnh sau để setup:
 - docker-compose build
 - docker-compose run --no-deps web rails new . --force --database=mysql
@@ -21,4 +21,4 @@ RUN echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.l
 - docker-compose run web rails db:create
 - docker-compose run web rails db:migrate
 # Lưu ý
-- Nếu bị lỗi ở file entrypoint.sh thì bấ chuyển CRLF sang LF tại file đó
+- Nếu bị lỗi ở file entrypoint.sh thì bấm chuyển CRLF sang LF tại file đó
