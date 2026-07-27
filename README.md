@@ -16,9 +16,10 @@ RUN echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.l
 (Các file này đã có sẵn trong project, nên có thể bỏ qua bước này)
 # Sau khi tạo và viết các lệnh, chạy lần lượt các câu lẹnh sau để setup:
 - docker-compose build
-- docker-compose run --no-deps web rails new . --force --database=mysql
-- docker-compose build
 - docker-compose run web rails db:create
 - docker-compose run web rails db:migrate
+- docker-compose up
 # Lưu ý
-- Nếu bị lỗi ở file entrypoint.sh thì bấm chuyển CRLF sang LF tại file đó
+- Nếu bị lỗi "exec /usr/bin/entrypoint.sh: no such file or directory" ở file entrypoint.sh thì bấm chuyển CRLF sang LF tại file đó, sau đó chạy lại lệnh docker-compose build
+
+Sau khi setup xong, truy cập vào trang http://localhost:3000/login để xem kết quả
