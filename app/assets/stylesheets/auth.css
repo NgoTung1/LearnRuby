@@ -112,19 +112,14 @@
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
   margin-top: 8px;
-}
-
-.btn-submit:hover {
-  opacity: 0.9;
-  transform: translateY(-2px);
 }
 
 .form-footer {
   margin-top: 24px;
   text-align: center;
   font-size: 14px;
+  display: inline;
   color: #94a3b8;
 }
 
@@ -137,4 +132,60 @@
 
 .form-footer p {
   margin: 8px 0;
+}
+
+.input-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.input-wrapper .icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  pointer-events: none; 
+}
+
+.input-wrapper .left-icon {
+  left: 14px; 
+}
+
+.input-wrapper .right-icon {
+  right: 14px; 
+  pointer-events: auto; 
+  cursor: pointer;
+}
+
+.form-input.with-left-icon {
+  padding-left: 44px;
+}
+
+.form-input.with-both-icons {
+  padding-left: 44px;
+  padding-right: 44px;
+}
+
+.btn-google {
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  width: 100%;
+  padding: 12px;
+  background-color: #FFFFFF;
+  border: 1px solid #CBD5E1; 
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #121C2A; 
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-google .gg-icon {
+  width: 22px;
+  height: 22px;
+  margin-right: 12px; 
 }

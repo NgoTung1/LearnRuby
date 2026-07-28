@@ -24,25 +24,51 @@
       
       <div class="form-group">
         <%= f.label :email, "Email", class: "form-label" %>
-        <%= f.email_field :email, class: "form-input", placeholder: "Nhập email của bạn", required: true %>
+        <div class="input-wrapper">
+          <%= image_tag 'Envelope.svg', class: 'icon left-icon' %>
+          <%= f.email_field :email, class: "form-input with-left-icon", placeholder: "Nhập email của bạn", required: true %>
+        </div>
       </div>
 
       <div class="form-group">
         <%= f.label :password, "Mật khẩu", class: "form-label" %>
-        <%= f.password_field :password, class: "form-input", placeholder: "Nhập mật khẩu", required: true %>
+        <div class="input-wrapper">
+          <%= image_tag 'Lock.svg', class: 'icon left-icon' %>
+          <%= f.password_field :password, class: "form-input with-both-icons", placeholder: "Nhập mật khẩu", required: true, id: "password-input" %>
+          <%= image_tag 'Eye.svg', class: 'icon right-icon', id: 'toggle-password' %>
+        </div>
       </div>
 
       <div class="form-actions">
         <%= f.submit "Đăng nhập", class: "btn-submit" %>
       </div>
+
       <div class="divider">
-       <span> hoặc </span>
+        <span>hoặc</span>
       </div>
-      <div class="form-footer">
-        <p>Chưa có tài khoản? <%= link_to "Đăng ký", register_path %></p>
-        <p>Đăng nhập bằng <%= link_to "Google", "/register/google", method: :post %></p>
-      </div>
-      
     <% end %>
+
+    <div class="form-footer">
+      <%= button_to "/register/google", method: :post, class: "btn-google" do %>
+        <%= image_tag 'Google.svg', class: 'gg-icon' %>
+        Đăng nhập bằng Google
+      <% end %>
+
+      <p style="margin-top: 24px;">Chưa có tài khoản? <%= link_to "Đăng ký", register_path %></p>
+    </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const togglePassword = document.getElementById("toggle-password");
+    const passwordInput = document.getElementById("password-input");
+
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener("click", function() {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+      });
+    }
+  });
+</script>
