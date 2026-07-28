@@ -4,11 +4,12 @@
     <title>Weather on Rails</title>
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-    
+    <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= yield :extra_css %>
   </head>
-
+  
   <body>
+    <%= render 'layouts/header' %>
     <% if notice %>
       <div style="background: #d4edda; color: #155724; padding: 10px; text-align: center;"><%= notice %></div>
     <% end %>
@@ -17,5 +18,6 @@
     <% end %>
 
     <%= yield %>
+    <%= render 'layouts/footer'%>
   </body>
 </html>
