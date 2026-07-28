@@ -18,6 +18,7 @@ RUN echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.l
 - docker-compose build
 - docker-compose run web rails db:create
 - docker-compose run web rails db:migrate
+- docker compose exec web rails db:migrate RAILS_ENV=test - Tạo các bảng cho database test
 - docker-compose up
 # Lưu ý
 - Nếu bị lỗi "exec /usr/bin/entrypoint.sh: no such file or directory" ở file entrypoint.sh thì bấm chuyển CRLF sang LF tại file đó, sau đó chạy lại lệnh docker-compose build, rồi chạy lại lệnh bị lỗi

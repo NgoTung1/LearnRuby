@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Weather on Rails</title>
+    <title><%= content_for?(:title) ? yield(:title) : "Weather on Rails" %></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
@@ -17,7 +19,10 @@
       <div style="background: #f8d7da; color: #721c24; padding: 10px; text-align: center;"><%= alert %></div>
     <% end %>
 
-    <%= yield %>
+    <main class="container">
+      <%= yield %>
+    </main>
+    
     <%= render 'layouts/footer'%>
   </body>
 </html>

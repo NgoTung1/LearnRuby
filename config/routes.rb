@@ -12,5 +12,9 @@ Rails.application.routes.draw do
   post 'login', to: 'sessions#save'
   delete 'login', to: 'sessions#destroy'
 
+  get 'favorite', to: 'favourites#new'
+
+
+  get 'hisoty', to: 'histories#new'
 
 end
