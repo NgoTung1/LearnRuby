@@ -1,37 +1,95 @@
-<div style="max-width: 400px; margin: 50px auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
-  <h2 style="text-align: center;">Đăng ký tài khoản</h2>
+<% content_for :extra_css do %>
+  <%= stylesheet_link_tag 'register', media: 'all' %>
+<% end %>
 
-  <%= form_with(model: @user, url: register_path, local: true) do |f| %>
-    
-    <% if @user.errors.any? %>
-      <div style="color: red; margin-bottom: 15px;">
-        <ul>
-          <% @user.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
+<div class="register-container">
+  <div class="register-box">
+    <div class="register-header">
+      <h1>Tạo tài khoản</h1>
+      <h2>Đăng kí để lưu thành phố mà bạn đang theo dõi</h2>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error">
+        <%= flash[:alert] %>
+      </div>
+    <% end %>
+    <% if flash[:notice] %>
+      <div class="alert alert-success">
+        <%= flash[:notice] %>
       </div>
     <% end %>
 
-    <div style="margin-bottom: 15px;">
-      <%= f.label :email, "Email của bạn:" %><br>
-      <%= f.email_field :email, required: true, style: "width: 100%; padding: 8px;" %>
+    <%= form_with(model: @user, url: register_path, local: true, class: "register-form") do |f| %>
+      
+      <div class="form-group">
+        <%= f.label :email, "Email", class: "form-label" %>
+        <div class="input-wrapper">
+          <%= image_tag 'Envelope.svg', class: 'icon left-icon' %>
+          <%= f.email_field :email, class: "form-input with-left-icon", placeholder: "Nhập email của bạn", required: true %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password, "Mật khẩu", class: "form-label" %>
+        <div class="input-wrapper">
+          <%= image_tag 'Lock.svg', class: 'icon left-icon' %>
+          <%= f.password_field :password, class: "form-input with-both-icons", placeholder: "Nhập mật khẩu", required: true, id: "password-input" %>
+          <%= image_tag 'Eye.svg', class: 'icon right-icon', id: 'toggle-password' %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Xác nhận mật khẩu", class: "form-label" %>
+        <div class="input-wrapper">
+          <%= image_tag 'Check_Pass.svg', class: 'icon left-icon' %>
+          <%= f.password_field :password_confirmation, class: "form-input with-both-icons", placeholder: "Nhập lại mật khẩu", required: true, id: "password-confirmation-input" %>
+          <%= image_tag 'Eye.svg', class: 'icon right-icon', id: 'toggle-password-confirmation' %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Đăng ký", class: "register-btn-submit" %>
+      </div>
+
+      <div class="register-divider">
+        <span>HOẶC</span>
+      </div>
+    <% end %>
+
+    <div class="register-footer">
+      <%= button_to "/register/google", method: :post, class: "register-btn-google" do %>
+        <%= image_tag 'Google.svg', class: 'gg-icon' %>
+        Đăng nhập bằng Google
+      <% end %>
+
+      <p style="margin-top: 24px;">Đã có tài khoản? <%= link_to "Đăng nhập", login_path %></p>
     </div>
-
-    <div style="margin-bottom: 15px;">
-      <%= f.label :password, "Mật khẩu:" %><br>
-      <%= f.password_field :password, required: true, style: "width: 100%; padding: 8px;" %>
-    </div>
-
-    <div style="margin-bottom: 20px;">
-      <%= f.label :password_confirmation, "Nhập lại mật khẩu:" %><br>
-      <%= f.password_field :password_confirmation, required: true, style: "width: 100%; padding: 8px;" %>
-    </div>
-
-    <%= f.submit "Tạo tài khoản", style: "width: 100%; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer;" %>
-  <% end %>
-
-  <p style="text-align: center; margin-top: 15px;">
-    Đã có tài khoản? <%= link_to "Đăng nhập", login_path %>
-  </p>
+  </div>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const togglePassword = document.getElementById("toggle-password");
+    const passwordInput = document.getElementById("password-input");
+
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener("click", function() {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        this.style.opacity = type === "text" ? "0.5" : "1";
+      });
+    }
+
+    const togglePasswordConfirm = document.getElementById("toggle-password-confirmation");
+    const passwordConfirmInput = document.getElementById("password-confirmation-input");
+
+    if (togglePasswordConfirm && passwordConfirmInput) {
+      togglePasswordConfirm.addEventListener("click", function() {
+        const type = passwordConfirmInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordConfirmInput.setAttribute("type", type);
+        this.style.opacity = type === "text" ? "0.5" : "1";
+      });
+    }
+  });
+</script>

@@ -42,7 +42,7 @@ body, html {
   font-size: 1.2rem;
   color: #0058BE;
 }
-.button_to {
+.navbar .button_to {
   display: inline-block;
 }
 .logout-btn {
