@@ -4,7 +4,7 @@
     <% if logged_in?%>
       <%= link_to "Thành phố yêu thích", "#" %>
       <%= link_to "Lịch sử tìm kiếm", "#" %>
-      <%= link_to "Đăng xuất", login_path, method: :delete %>
+      <%= button_to "Đăng xuất", login_path, method: :delete, class: "logout-btn" %>
     <% else %>
       <%= link_to "Đăng nhập", login_path %>
       <%= link_to "Đăng ký", register_path %>

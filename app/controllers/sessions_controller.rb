@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
     end
     def save
         user = User.find_by(email: params[:email])
-        if user.authenticate(params[:password])
+        if user && user.authenticate(params[:password])
             if (user.is_verified? == false) 
                 redirect_to otp_path
             else 
