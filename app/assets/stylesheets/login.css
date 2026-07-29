@@ -11,7 +11,6 @@
 .login-box {
   background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   border: 1px;
   border-radius: 12px;
   padding: 40px 32px;

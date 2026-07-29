@@ -21,7 +21,6 @@ class OtpsController < ApplicationController
 
       end
     end
-
   end
   def resend
     @user = User.find_by(id: session[:registration_user_id])

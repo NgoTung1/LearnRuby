@@ -1,0 +1,26 @@
+<% content_for :extra_css do%>
+    <%= stylesheet_link_tag 'otp', media: 'all'%>
+<% end %>
+
+<div class = "otp-container">
+    <div class = "otp-box">
+        <div class = "otp-header">
+            <%= image_tag 'Email.svg'%>
+            <h1> Xác thực tài khoản </h1>
+            <h2> Chúng tôi đã gửi mã xác thực 6 chữ số tới email của bạn </h2>
+        </div>
+        <%= form_with(url: create_otp_path, local: true, class: 'otp-form') do |f| %>
+            <div class = "form-group" >
+                <%= f.text_field :otp_code, class: "otp-input" %>
+            </div>
+            <div class = "form-action">
+                <%= f.submit "Xác nhận", class: "btn-submit"%>
+            </div>
+        <% end %>
+        <div class = "form-footer">
+            <div style="margin-top: 24px; display: flex; justify-content: center; align-items: center; gap: 4px;">
+                Không nhận được mã? <%= button_to "Gửi lại", resend_otp_path, method: :post %>
+            </div>
+        </div>
+    </div>
+</div>
