@@ -7,6 +7,8 @@ class User < ApplicationRecord
         self.otp_code = rand(100000..999999).to_s
         self.otp_expires_at = 10.minutes.from_now
         save!
+
+        UserMailer.otp_email(self).deliver_now
     end
 
     def check_otp?(code)
