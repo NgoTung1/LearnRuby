@@ -19,6 +19,21 @@ class SessionsController < ApplicationController
             render :new
         end
     end
+    def google_login
+        auth = request.env['omniauth.auth']
+        user = auth.present? ? User.from_omniauth(auth) : nil
+        if user && user.persisted?
+            cookies.encrypted[:user_id] = {
+                value: user.id,
+                expires: 30.minutes.from_now,
+                httponly: true
+            }
+            redirect_to root_path, notice: "Đăng nhập thành công"
+        else
+            flash[:alert] ="Đăng nhập thất bại. vui lòng thử lại"
+            redirect_to login_path
+        end
+    end
     def destroy
         cookies.delete(:user_id) 
         redirect_to root_path, notice: "Đăng xuất thành công"

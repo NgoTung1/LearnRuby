@@ -53,6 +53,34 @@ RSpec.describe SessionsController, type: :controller do
         expect(response).to redirect_to(root_path)
       end
     end
+  describe 'GET /auth/google_oauth2/callback' do
+    context 'khi đăng nhập Google thành công' do
+      before do
+        OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+          provider: 'google_oauth2',
+          uid: '987654321',
+          info: { email: 'user@gmail.com' }
+        })
+        request.env['omniauth.auth'] = OmniAuth.config.mock_auth[:google_oauth2]
+      end
+      it 'lưu cookie user_id và chuyển hướng tới root_path' do
+        get :google_login, params: { provider: 'google-oauth2'}
+        
+        user = User.find_by(email: 'user@gmail.com')
+        expect(cookies.encrypted[:user_id]).to eq(user.id)
+        expect(response).to redirect_to(root_path)
+      end
+    end
+    context 'khi đăng nhập thất bại' do
+      before do
+        request.env['omniauth.auth'] = nil
+      end
+      it 'chuyển hướng về trang login' do
+        get :google_login, params: {provider: 'google_oauth2'}
+        expect(response).to redirect_to(login_path)
+      end
+    end
+  end
 end    
 
 

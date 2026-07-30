@@ -44,3 +44,4 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'concurrent-ruby', '1.3.4'
 gem 'ffi', '1.15.5'
 gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
