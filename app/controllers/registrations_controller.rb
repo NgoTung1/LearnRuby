@@ -8,7 +8,11 @@ class RegistrationsController < ApplicationController
   
     if @user.save
       @user.generate_otp!
-      session[:registration_user_id] = @user.id
+      cookies.encrypted[:user_id] = {
+        value: @user.id,
+        expires: 30.minutes.from_now,
+        httponly: true
+      }
       
       redirect_to otp_path, notice: "Đăng ký thành công! Vui lòng kiểm tra email để lấy mã OTP."
     else

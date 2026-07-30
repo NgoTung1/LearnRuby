@@ -8,7 +8,7 @@ class User < ApplicationRecord
         self.otp_expires_at = 10.minutes.from_now
         save!
 
-        UserMailer.otp_email(self).deliver_now
+        UserMailer.otp_email(self).deliver_later
     end
 
     def check_otp?(code)
