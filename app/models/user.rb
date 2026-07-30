@@ -1,8 +1,16 @@
 class User < ApplicationRecord
-    has_secure_password
+    has_secure_password validations: false
     has_many :favorites, dependent: :destroy
     has_many :search_histories, dependent: :destroy
-    validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP}
+    validates :email, 
+        presence: { message: "không được để trống" }, 
+        uniqueness: { message: "đã tồn tại trong hệ thống" }, 
+        format: { with: URI::MailTo::EMAIL_REGEXP, message: "không đúng định dạng" }
+    validates :password, presence: 
+    { message: "không được để trống" }, 
+    confirmation: 
+    { message: "xác nhận không trùng khớp" },
+    on: :create
     def generate_otp! 
         self.otp_code = rand(100000..999999).to_s
         self.otp_expires_at = 10.minutes.from_now

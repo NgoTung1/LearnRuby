@@ -28,6 +28,11 @@
           <%= image_tag 'Envelope.svg', class: 'icon left-icon' %>
           <%= f.email_field :email, class: "form-input with-left-icon", placeholder: "Nhập email của bạn", required: true %>
         </div>
+        <% if @user&.errors[:email]&.any? %>
+          <small class="error-text" style="color: #ef4444; margin-top: 4px; display: block;">
+            Email <%= @user.errors[:email].first %>
+          </small>
+        <% end %>
       </div>
 
       <div class="form-group">
@@ -46,6 +51,11 @@
           <%= f.password_field :password_confirmation, class: "form-input with-both-icons", placeholder: "Nhập lại mật khẩu", required: true, id: "password-confirmation-input" %>
           <%= image_tag 'Eye.svg', class: 'icon right-icon', id: 'toggle-password-confirmation' %>
         </div>
+        <% if @user&.errors[:password_confirmation]&.any? %>
+          <small class="error-text" style="color: #ef4444; margin-top: 4px; display: block;">
+            Mật khẩu <%= @user.errors[:password_confirmation].first %>
+          </small>
+        <% end %>
       </div>
 
       <div class="form-actions">
