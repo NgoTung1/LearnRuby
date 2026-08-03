@@ -1,4 +1,4 @@
-class WeatherController < ApplicationController
+class WeathersController < ApplicationController
     def index
         city = params[:city] || ""
         weather = WeatherApiService.new(city)
@@ -7,7 +7,7 @@ class WeatherController < ApplicationController
             @climate = result[:data]
         else
             @climate = nil
-            @error = result[:error]
+            @error = nil
         end
     end
 end

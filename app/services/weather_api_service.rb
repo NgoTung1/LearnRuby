@@ -11,23 +11,31 @@ class WeatherApiService
     end
 
     def call
+        return {success: false, error: "Vui lòng nhập tên thành phố"} if @city_name.blank?
         uri = URI("#{URL}?q=#{URI.encode_www_form_component(@city_name)}&appid=#{@api_key}&units=metric&lang=vi")
         response = Net::HTTP.get_response(uri)
-        if response.is_a?(Net::HTTPSuccess)
-            data = JSON.parse(response.body)
+        if response.is_a?(Net::HTTPSuccess) 
+            {   success: true,
+                data: JSON.parse(response.body)
+            }
         else
             {
                 success: false,
                 error: "Không tìm thấy thành phố '#{@city_name}'"
             }
         end
+        rescue StandardError => e
+            {success: false, error: "Không có kết nối mạng"}
     end
 
     def multiple_call
         uri = URI("#{BULK_URL}")
         response = Net::HTTP.get_response(uri)
-        if response.is_a?(Net::HTTPSuccess)
-            data = JSON.parse(response.body)
+        if response.is_a?(Net::HTTPSuccess) 
+            {
+                success: true,
+                data: JSON.parse(response.body)
+            }
         else 
             {
                 success: false,

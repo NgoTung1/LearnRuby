@@ -1,0 +1,98 @@
+<% content_for :extra_css do %>
+  <%= stylesheet_link_tag 'home', media: 'all' %>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<% end %>
+
+<div class = 'home-container'>
+    <div class = 'main-content'>
+        <div class = 'home-section'>
+            <div class = 'home-heading'>
+                <h1>Tra cứu thời tiết </h1>
+                <h2> Nhập tên thành phố để tra cứu thời tiết </h2>
+            </div>
+            <%= form_with url: root_path, method: :get, local: true, class: 'search-form' do |form| %>
+                <div class = 'input-group'>
+                    <%= form.text_field :city, value: params[:city], placeholder: "Nhập tên thành phố", class: 'search-input'%>
+                    <%=  form.button type: "submit", class: 'btn-search' do %>
+                        <i class = "fas fa-search">  </i>
+                    <% end %>
+                </div>
+            <%end%>
+        </div>
+        <div class = "result-section">
+            <% if @climate.present? %>
+                <div class="weather-card">
+                    <div class = "temp-box">      
+                        <span class="temperature" ><%= @climate['main']['temp'].round %>°C</span>
+                    </div>    
+                    <div class="weather-header">
+                        <h2><%= @climate['name'] %>, <%= @climate['sys']['country'] %></h2>
+                        <p class="description"><%= @climate['weather'][0]['description'].capitalize %></p>
+                        <div class="weather-icon">
+                          <% main_weather = @climate['weather'][0]['main'] %>
+                          <% case main_weather %>
+                          <% when 'Clear' %>
+                            <i class="fas fa-sun" style="font-size: 100px; color: #f59e0b;"></i>
+                          <% when 'Clouds' %>
+                            <i class="fas fa-cloud-sun" style="font-size: 100px; color: #64748b;"></i>
+                          <% when 'Rain', 'Drizzle' %>
+                            <i class="fas fa-cloud-showers-heavy" style="font-size: 100px; color: #3b82f6;"></i>
+                          <% when 'Thunderstorm' %>
+                            <i class="fas fa-bolt" style="font-size: 100px; color: #eab308;"></i>
+                          <% when 'Snow' %>
+                            <i class="fas fa-snowflake" style="font-size: 100px; color: #38bdf8;"></i>
+                          <% else %>
+                            <i class="fas fa-cloud" style="font-size: 100px; color: #94a3b8;"></i>
+                          <% end %>
+                        </div>
+                    </div>
+                    
+                    <div class="weather-body">        
+                        <div class="weather-details">
+                        <p>Cảm giác như: <strong><%= @climate['main']['feels_like'].round %>°C</strong></p>
+                        <p>Độ ẩm: <strong><%= @climate['main']['humidity'] %>%</strong></p>
+                        <p>Tốc độ gió: <strong><%= @climate['wind']['speed'] %> m/s</strong></p>
+                        </div>
+                    </div>
+                    </div>
+            <% elsif @error.present? %>
+                <div class="alert-error">
+                <p><i class="fas fa-exclamation-circle"></i> <%= @error %></p>
+                </div>
+            <% else %>
+                <div class="empty-state-card">
+                    <div class="empty-icon">
+                        <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+                        <circle cx="12" cy="12" r="4"/>
+                        <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/>
+                        </svg>
+                    </div>
+                    <h3>Chưa có dữ liệu hiển thị</h3>
+                    <p>Kết quả thời tiết sẽ hiển thị ở đây sau khi bạn thực hiện tìm kiếm một thành phố.</p>
+                </div>
+            <% end %>
+        <% if logged_in? %>
+        </div>
+    </div>
+    <div class="sidebar">
+      <div class="sidebar-card">
+        <h3><i class="fas fa-history"></i> Recent Searches</h3>
+        <ul class="recent-list">
+          <li><span>Hà Nội</span> <strong>28°C</strong></li>
+          <li><span>Đà Nẵng</span> <strong>31°C</strong></li>
+          <li><span>Tokyo</span> <strong>15°C</strong></li>
+        </ul>
+      </div>
+      <div class="sidebar-card">
+        <h3><i class="fas fa-star"></i> Favorite Cities</h3>
+        <div class="favorite-tags">
+          <span class="tag active">Hồ Chí Minh</span>
+          <span class="tag">Paris</span>
+          <span class="tag">Sydney</span>
+          <button class="btn-add-favorite">+ Add New</button>
+        </div>
+      </div>
+        </div>
+        <% end %>
+    </div>
+</div>
