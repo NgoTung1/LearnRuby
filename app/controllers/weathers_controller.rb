@@ -7,7 +7,7 @@ class WeathersController < ApplicationController
             @climate = result[:data]
         else
             @climate = nil
-            @error = nil
+            @error = result[:error]
         end
     end
 end

@@ -11,7 +11,7 @@ class WeatherApiService
     end
 
     def call
-        return {success: false, error: "Vui lòng nhập tên thành phố"} if @city_name.blank?
+        return {success: false, error: nil} if @city_name.blank?
         uri = URI("#{URL}?q=#{URI.encode_www_form_component(@city_name)}&appid=#{@api_key}&units=metric&lang=vi")
         response = Net::HTTP.get_response(uri)
         if response.is_a?(Net::HTTPSuccess) 
