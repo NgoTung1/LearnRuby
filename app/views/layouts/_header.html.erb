@@ -3,7 +3,7 @@
   <nav  >
     <% if logged_in?%>
       <%= link_to "Thành phố yêu thích", "#" %>
-      <%= link_to "Lịch sử tìm kiếm", "#" %>
+      <%= link_to "Lịch sử tìm kiếm", history_path %>
       <%= button_to "Đăng xuất", login_path, method: :delete, class: "logout-btn" %>
     <% else %>
       <%= link_to "Đăng nhập", login_path %>

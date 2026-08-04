@@ -1,0 +1,25 @@
+<% content_for :extra_css do%>
+    <%= stylesheet_link_tag 'history', media: 'all'%>
+<% end %><div class="history-page-wrapper">
+  <div class="page-header">
+    <div class="clock-icon-badge">
+      <i class="fas fa-clock"></i>
+    </div>
+    <div>
+      <h1>Lịch sử tìm kiếm</h1>
+      <p class="subtitle">10 Thành phố gần nhất mà bạn đã tìm kiếm</p>
+    </div>
+  </div>
+
+  <div class="history-card-box">
+    <% if @histories.present? %>
+      <div class="history-list">
+        <%= render partial: 'histories_item', collection: @histories, as: :item %>
+      </div>
+    <% else %>
+      <div class="empty-history">
+        <p>Bạn chưa có lịch sử tìm kiếm nào.</p>
+      </div>
+    <% end %>
+  </div>
+</div>

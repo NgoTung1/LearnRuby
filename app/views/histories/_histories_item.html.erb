@@ -1,0 +1,44 @@
+<div class="history-item-row">
+  <div class="item-left">
+    <div class="location-icon-wrapper">
+      <i class="fas fa-map-marker-alt"></i>
+    </div>
+
+    <div class="location-info">
+      <div class="city-title">
+        <%= link_to root_path(city: item[:city_name]), class: "city-link" do %>
+          <strong><%= item[:city_name] %></strong>
+          <% if item[:weather] && item[:weather]['sys'] %>
+            , <%= item[:weather]['sys']['country'] %>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="weather-subinfo">
+        <% if item[:weather] %>
+          <% main_weather = item[:weather]['weather'][0]['main'] %>
+          <% case main_weather %>
+          <% when 'Clear' %>
+            <i class="fas fa-sun text-amber"></i>
+          <% when 'Clouds' %>
+            <i class="fas fa-cloud text-slate"></i>
+          <% when 'Rain', 'Drizzle' %>
+            <i class="fas fa-cloud-rain text-blue"></i>
+          <% when 'Snow' %>
+            <i class="fas fa-snowflake text-sky"></i>
+          <% else %>
+          <i class="fas fa-cloud text-slate"></i>
+          <% end %>
+
+          <span><%= item[:weather]['main']['temp'].round %>°C, <%= item[:weather]['weather'][0]['description'].capitalize %></span>
+        <% else %>
+          <span class="text-muted">--</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="item-right">
+    <span class="time-text"><%= time_ago_in_words_vi(item[:updated_at]) %></span>
+  </div>
+</div>

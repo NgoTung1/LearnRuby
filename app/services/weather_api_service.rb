@@ -28,6 +28,23 @@ class WeatherApiService
             {success: false, error: "Không có kết nối mạng"}
     end
 
+    def self.fetch_cached(city_name)
+        return {success: false, error: nil} if city_name.blank?
+        clean_key = city_name.to_s.strip.downcase.parameterize
+        cached_key = "v1/weather/#{clean_key}"
+
+        cached_data = Rails.cache.read(cached_key)
+        return {success: true, data: cached_data} if cached_data.present?
+
+        result = new(city_name).call
+
+        if result[:success]
+            Rails.cache.write(cached_key, result[:data], expires_in: 15.minutes)
+        end
+
+        result
+    end
+
     def multiple_call
         uri = URI("#{BULK_URL}")
         response = Net::HTTP.get_response(uri)

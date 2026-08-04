@@ -35,7 +35,6 @@ body {
   gap: 20px;
 }
 
-/* KHU VỰC HEADING & FORM TÌM KIẾM */
 .home-section {
   background: #ffffff;
   padding: 22px;
@@ -105,7 +104,6 @@ body {
   background-color: #1d4ed8;
 }
 
-/* 3. KHU VỰC EMPTY STATE (Màn hình chờ) */
 .empty-state-card {
   background: #ffffff;
   border-radius: 16px;
@@ -136,7 +134,6 @@ body {
   line-height: 1.5;
 }
 
-/* KHU VỰC THẺ KẾT QUẢ THỜI TIẾT */
 .result-section {
     max-width: 650px;
     width: 100%;
@@ -199,7 +196,6 @@ body {
   margin-bottom: 6px;
 }
 
-/* Alert Lỗi */
 .alert-error {
   background-color: #fef2f2;
   border: 1px solid #fecaca;
@@ -209,7 +205,6 @@ body {
   font-size: 14px;
 }
 
-/* SIDEBAR (LOGGED IN) */
 .sidebar-card {
   background: #ffffff;
   border-radius: 16px;

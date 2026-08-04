@@ -26,7 +26,7 @@ class User < ApplicationRecord
     def resend_otp?
         otp_expires_at.nil? || Time.current >= otp_expires_at - 8.minutes
     end
-
+        
     def self.from_omniauth(auth)
         where(email: auth.info.email).first_or_initialize do |user|
             user.uid = auth.uid
