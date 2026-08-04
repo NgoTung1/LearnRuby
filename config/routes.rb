@@ -13,9 +13,10 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#google_login'
   get '/auth/failure', to: redirect('/login')
 
-  get 'favorite', to: 'favourites#index'
-
-
   get 'history', to: 'histories#index'
+
+  get 'favorites', to: 'favourites#index', as: 'favorites'
+  post 'favorites', to: 'favourites#create', as: 'create_favorite'
+  delete 'favorites/:id', to: 'favourites#destroy', as: 'destroy_favorite'
 
 end

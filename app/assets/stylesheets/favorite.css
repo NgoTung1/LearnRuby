@@ -1,0 +1,102 @@
+.favorites-page-wrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+.favorites-page-wrapper h2 {
+  font-size: 24px;
+  color: #0f172a;
+  margin-bottom: 24px;
+}
+
+.favorites-page-wrapper h2 i {
+  color: #2563eb;
+}
+
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.favorite-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease-in-out;
+}
+
+.favorite-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.favorite-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.favorite-card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+.btn-delete-fav {
+  background: none;
+  border: none;
+  color: #cbd5e1;
+  cursor: pointer;
+  font-size: 16px;
+  transition: color 0.2s;
+}
+
+.btn-delete-fav:hover {
+  color: #ef4444;
+}
+
+.favorite-card-body {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.favorite-card-body .temp {
+  font-size: 26px;
+  color: #0f172a;
+  font-weight: bold;
+}
+
+.favorite-card-body .desc {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.favorite-card-footer {
+  text-align: right;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 12px;
+}
+
+.favorite-card-footer a {
+  color: #2563eb;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.favorite-card-footer a:hover {
+  text-decoration: underline;
+}
+
+.empty-favorites {
+  color: #64748b;
+  font-size: 15px;
+}

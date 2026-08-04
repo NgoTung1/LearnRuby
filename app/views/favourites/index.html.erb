@@ -1,0 +1,60 @@
+<% content_for :extra_css do %>
+  <%= stylesheet_link_tag 'favorite', media: 'all' %>
+<% end %>
+
+<div class="favorites-page-wrapper">
+  <h2>
+    <i class="fas fa-heart"></i> Thành phố yêu thích
+  </h2>
+
+  <% if @favorite_weathers.present? %>
+    <div class="favorites-grid">
+      <% @favorite_weathers.each do |item| %>
+        <div class="favorite-card">
+          
+          <div class="favorite-card-header">
+            <h3><%= item[:city_name] %></h3>
+            
+            <%= button_to destroy_favorite_path(item[:id]), method: :delete, data: { confirm: "Xóa #{item[:city_name]} khỏi danh sách?" }, class: "btn-delete-fav" do %>
+              <i class="fas fa-trash-alt"></i>
+            <% end %>
+          </div>
+
+          <% if item[:weather] %>
+            <div class="favorite-card-body">
+              <% main_weather = item[:weather]['weather'][0]['main'] %>
+              <% case main_weather %>
+              <% when 'Clear' %>
+                <i class="fas fa-sun" style="font-size: 36px; color: #f59e0b;"></i>
+              <% when 'Clouds' %>
+                <i class="fas fa-cloud-sun" style="font-size: 36px; color: #64748b;"></i>
+              <% when 'Rain', 'Drizzle' %>
+                <i class="fas fa-cloud-showers-heavy" style="font-size: 36px; color: #3b82f6;"></i>
+              <% when 'Snow' %>
+                <i class="fas fa-snowflake" style="font-size: 36px; color: #38bdf8;"></i>
+              <% else %>
+                <i class="fas fa-cloud" style="font-size: 36px; color: #94a3b8;"></i>
+              <% end %>
+
+              <div>
+                <strong class="temp"><%= item[:weather]['main']['temp'].round %>°C</strong>
+                <div class="desc"><%= item[:weather]['weather'][0]['description'].capitalize %></div>
+              </div>
+            </div>
+          <% else %>
+            <p class="empty-favorites">Không có dữ liệu thời tiết</p>
+          <% end %>
+
+          <div class="favorite-card-footer">
+            <%= link_to root_path(city: item[:city_name]) do %>
+              Xem thời tiết <i class="fas fa-arrow-right"></i>
+            <% end %>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="empty-favorites">Chưa có thành phố nào trong danh sách yêu thích.</p>
+  <% end %>
+</div>
