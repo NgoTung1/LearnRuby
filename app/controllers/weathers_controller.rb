@@ -6,7 +6,7 @@ class WeathersController < ApplicationController
             result = weather.call
             if result[:success]
                 @climate = result[:data]
-                SearchHistoryService.record_search(current_user, city) if current_user
+                SearchHistoryService.record_search(current_user, @climate['name']) if current_user
             else
                 @climate = nil
                 @error = result[:error]

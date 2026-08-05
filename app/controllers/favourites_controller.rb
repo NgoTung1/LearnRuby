@@ -1,4 +1,3 @@
-# app/controllers/favourites_controller.rb
 class FavouritesController < ApplicationController
   before_action :require_login
 
@@ -15,7 +14,7 @@ class FavouritesController < ApplicationController
 
   def create
     city_name = params[:city_name]
-    favorite = current_user.favorites.find_or_initialize_by(city_name: city_name.to_s.squish.titleize)
+    favorite = current_user.favorites.find_or_initialize_by(city_name: city_name)
 
     if favorite.save
       render json: { success: true, action: 'created', favorite_id: favorite.id, city_name: favorite.city_name }

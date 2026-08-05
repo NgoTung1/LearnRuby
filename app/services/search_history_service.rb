@@ -4,7 +4,7 @@ class SearchHistoryService
   def self.record_search(user, city_name)
     return if user.nil? || city_name.blank?
 
-    history = user.search_histories.find_or_initialize_by(city_name: city_name.to_s.squish.titleize)
+    history = user.search_histories.find_or_initialize_by(city_name: city_name)
     
     history.updated_at = Time.current
     history.save!

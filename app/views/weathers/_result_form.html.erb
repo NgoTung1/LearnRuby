@@ -1,0 +1,70 @@
+<div class="result-section">
+      <% if @climate.present? %>
+        <div class="weather-card" style="position: relative;">
+          <% if logged_in? %>
+            <% existing_fav = current_user.favorites.find_by(city_name: @climate['name']) %>
+            <button type="button" 
+                    id="js-fav-btn"
+                    class="btn-fav-toggle <%= 'is-favorite' if existing_fav %>"
+                    data-city="<%= @climate['name'] %>"
+                    data-fav-id="<%= existing_fav&.id %>"
+                    style="position: absolute; top: 16px; right: 16px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.08); transition: all 0.2s; z-index: 10;">
+              <i class="<%= existing_fav ? 'fas fa-heart' : 'far fa-heart' %>" style="color: <%= existing_fav ? '#ef4444' : '#64748b' %>; font-size: 18px;"></i>
+            </button>
+          <% end %>
+
+          <div class="temp-box">      
+            <span class="temperature"><%= @climate['main']['temp'].round %>°C</span>
+          </div>    
+
+          <div class="weather-header">
+            <div class="city-title-wrapper" style="display: flex; align-items: center; justify-content: center; gap: 12px;">
+              <h2 style="margin: 0;"><%= @climate['name'] %>, <%= @climate['sys']['country'] %></h2>
+            </div>
+
+            <p class="description"><%= @climate['weather'][0]['description'].capitalize %></p>
+            <div class="weather-icon">
+              <% main_weather = @climate['weather'][0]['main'] %>
+              <% case main_weather %>
+              <% when 'Clear' %>
+                <i class="fas fa-sun" style="font-size: 100px; color: #f59e0b;"></i>
+              <% when 'Clouds' %>
+                <i class="fas fa-cloud-sun" style="font-size: 100px; color: #64748b;"></i>
+              <% when 'Rain', 'Drizzle' %>
+                <i class="fas fa-cloud-showers-heavy" style="font-size: 100px; color: #3b82f6;"></i>
+              <% when 'Thunderstorm' %>
+                <i class="fas fa-bolt" style="font-size: 100px; color: #eab308;"></i>
+              <% when 'Snow' %>
+                <i class="fas fa-snowflake" style="font-size: 100px; color: #38bdf8;"></i>
+              <% else %>
+                <i class="fas fa-cloud" style="font-size: 100px; color: #94a3b8;"></i>
+              <% end %>
+            </div>
+          </div>
+          
+          <div class="weather-body">     
+            <div class="weather-details">
+              <p>Cảm giác như: <strong><%= @climate['main']['feels_like'].round %>°C</strong></p>
+              <p>Độ ẩm: <strong><%= @climate['main']['humidity'] %>%</strong></p>
+              <p>Tốc độ gió: <strong><%= @climate['wind']['speed'] %> m/s</strong></p>
+            </div>
+          </div>
+        </div>
+      <% elsif @error.present? %>
+        <div class="alert-error">
+          <p><i class="fas fa-exclamation-circle"></i> <%= @error %></p>
+        </div>
+      <% else %>
+        <div class="empty-state-card">
+          <div class="empty-icon">
+            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5">
+              <circle cx="12" cy="12" r="4"/>
+              <path d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"/>
+            </svg>
+          </div>
+          <h3>Chưa có dữ liệu hiển thị</h3>
+          <p>Kết quả thời tiết sẽ hiển thị ở đây sau khi bạn thực hiện tìm kiếm một thành phố.</p>
+        </div>
+      <% end %>
+    </div>
+  </div> 
