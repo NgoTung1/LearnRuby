@@ -14,6 +14,51 @@
 * **Quản lý thành phố yêu thích (Favorites):** Lưu các thành phố thường xuyên theo dõi vào danh sách yêu thích để xem nhanh.
 * **Lịch sử tìm kiếm (History):** Tự động lưu và cho phép xem lại danh sách các thành phố đã tra cứu trước đó.
 
+## 📸 Giao diện minh họa
+
+### 1. Trang chủ & Tra cứu thời tiết (Chưa đăng nhập)
+![Trang chủ thời tiết](app/assets/images/weather-page.JPG)
+
+### 2. Trang chủ & Tra cứu thời tiết (Đã đăng nhập)
+![Trang chủ khi đăng nhập](app/assets/images/weather-page-login.JPG)
+
+### 3. Giao diện Đăng nhập
+![Trang đăng nhập](app/assets/images/login.JPG)
+
+### 4. Giao diện Đăng ký
+![Trang đăng ký](app/assets/images/register.JPG)
+
+### 5. Giao diện Xác thực OTP
+![Trang xác thực OTP](app/assets/images/verify.JPG)
+
+### 6. Danh sách thành phố yêu thích (Favorites)
+![Trang yêu thích](app/assets/images/favourite.JPG)
+
+### 7. Lịch sử tìm kiếm (History)
+![Trang lịch sử tìm kiếm](app/assets/images/histories.JPG)
+
+---
+
+## Cấu hình Biến Môi Trường (.env)
+
+Tạo file `.env` tại thư mục gốc của dự án và khai báo các biến môi trường cần thiết trước khi chạy:
+
+```env
+# Cấu hình gửi email xác thực OTP (Gmail SMTP)
+GMAIL=your_email@gmail.com
+GMAIL_PASSWORD=your_gmail_app_password
+
+# Cấu hình Đăng nhập Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# API Key lấy dữ liệu thời tiết (OpenWeatherMap)
+WEATHER_API=your_weather_api_key
+
+# Mật khẩu Database MySQL trong Docker
+MYSQL_ROOT_PASSWORD=password
+```
+
 ---
 
 ## Công Nghệ Sử Dụng
@@ -47,7 +92,7 @@ RUN echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.l
 
 # Lưu ý
 - Nếu bị lỗi "exec /usr/bin/entrypoint.sh: no such file or directory" ở file entrypoint.sh thì bấm chuyển CRLF sang LF tại file đó, sau đó chạy lại lệnh docker-compose build, rồi chạy lại lệnh bị lỗi
-
+- Hiện tại ở trong file docker-compose.yml đang fix mật khẩu là password, có thể thêm biến ENV ở trên vào trong file đó lại
 ---
 
  Sau khi setup xong, truy cập vào trang http://localhost:3000/login để xem kết quả.
