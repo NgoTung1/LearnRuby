@@ -17,7 +17,7 @@
 ## 📸 Giao diện minh họa
 
 ### 1. Trang chủ & Tra cứu thời tiết (Chưa đăng nhập)
-![Trang chủ thời tiết](app/assets/images/weather-page.JPG)
+![Trang chủ thời tiết](app/assets/images/weather-page-not-login.JPG)
 
 ### 2. Trang chủ & Tra cứu thời tiết (Đã đăng nhập)
 ![Trang chủ khi đăng nhập](app/assets/images/weather-page-login.JPG)
