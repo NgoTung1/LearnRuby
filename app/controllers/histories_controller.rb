@@ -1,4 +1,5 @@
 class HistoriesController < ApplicationController
+  before_action :require_verified_user
   def index
     unless logged_in?
       redirect_to login_path, alert: "Bạn không thể sử dụng tính năng này khi chưa đăng nhập"

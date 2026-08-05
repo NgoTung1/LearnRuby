@@ -1,0 +1,33 @@
+<div class="sidebar">
+  <div class="sidebar-card">
+    <h3><i class="fas fa-history"></i> Tìm kiếm gần đây</h3>
+    <ul class="recent-list">
+      <% if @side_histories.present? %>
+        <% @side_histories.each do |item| %>
+          <li>
+            <%= link_to root_path(city: item[:city]) do %>
+              <strong><%= item[:city] %></strong>
+            <% end %>
+            <strong><%= item[:temp] %></strong>
+          </li>
+        <% end %>
+      <% else %>
+        <li><span>Chưa có lịch sử tìm kiếm</span></li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="sidebar-card">
+    <h3><i class="fas fa-star"></i> Thành phố yêu thích</h3>
+    <div class="favorite-tags">
+      <% if current_user.favorites.present? %>
+        <% current_user.favorites.limit(4).each do |fav| %>
+          <span class="tag"><%= fav.city_name %></span>
+        <% end %>
+      <% else %>
+        <span class="tag">Chưa có thành phố yêu thích</span>
+      <% end %>
+    </div>
+    <%= link_to "Quản lý yêu thích", favorites_path, class: "btn-link-action" %>
+  </div>
+</div>

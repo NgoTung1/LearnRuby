@@ -2,7 +2,7 @@
   <%= link_to "Weather on Rails", root_path, class: "logo" %>
   <nav  >
     <% if logged_in?%>
-      <%= link_to "Thành phố yêu thích", favorites_path %>
+      <%= link_to "Thành phố yêu thích", favorites_path %> 
       <%= link_to "Lịch sử tìm kiếm", history_path %>
       <%= button_to "Đăng xuất", login_path, method: :delete, class: "logout-btn" %>
     <% else %>

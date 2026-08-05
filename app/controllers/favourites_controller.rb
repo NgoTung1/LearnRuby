@@ -1,5 +1,5 @@
 class FavouritesController < ApplicationController
-  before_action :require_login
+  before_action :require_verified_user
 
   def index
     @favorite_weathers = current_user.favorites.order(created_at: :desc).map do |fav|
@@ -40,14 +40,4 @@ class FavouritesController < ApplicationController
     end
   end
 
-  private
-
-  def require_login
-    unless logged_in?
-      respond_to do |format|
-        format.json { render json: { success: false, error: "Bạn cần đăng nhập để thực hiện" }, status: :unauthorized }
-        format.html { redirect_to login_path, alert: "Bạn cần đăng nhập để thực hiện." }
-      end
-    end
-  end
 end

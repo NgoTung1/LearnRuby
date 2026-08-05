@@ -1,0 +1,133 @@
+.weather-card {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.city-title-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.city-title-wrapper h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.weather-header .description {
+  font-size: 14px;
+  color: #64748b;
+  margin: 4px auto 0 auto; 
+  text-align: center;   
+}
+
+.weather-body {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.temp-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.weather-icon {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.weather-icon i {
+  font-size: 100px;
+}
+
+.icon-sun { color: #f59e0b; }
+.icon-cloud-sun { color: #64748b; }
+.icon-rain { color: #3b82f6; }
+.icon-thunder { color: #eab308; }
+.icon-snow { color: #38bdf8; }
+.icon-cloud { color: #94a3b8; }
+
+.temperature {
+  font-size: 50px;     
+  font-weight: 800;      
+  color: #0f172a;
+  line-height: 1;
+}
+
+.weather-details p {
+  font-size: 13px;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.btn-fav-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.btn-fav-toggle i {
+  color: #64748b;
+  font-size: 18px;
+}
+
+.btn-fav-toggle.is-favorite i {
+  color: #ef4444;
+}
+
+.empty-state-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 48px 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  text-align: center;
+}
+
+.empty-icon {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.empty-state-card h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.empty-state-card p {
+  font-size: 13px;
+  color: #94a3b8;
+  max-width: 320px;
+  margin: 0 auto;
+  line-height: 1.5;
+}

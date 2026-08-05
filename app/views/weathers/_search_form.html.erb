@@ -1,0 +1,15 @@
+<div class="home-section">
+  <div class="home-heading">
+    <h1>Tra cứu thời tiết</h1>
+    <h2>Nhập tên thành phố để tra cứu thời tiết</h2>
+  </div>
+
+  <%= form_with url: root_path, method: :get, local: true, class: 'search-form' do |form| %>
+    <div class="input-group">
+      <%= form.text_field :city, value: params[:city], placeholder: "Nhập tên thành phố", class: 'search-input' %>
+      <%= form.button type: "submit", class: 'btn-search' do %>
+        <i class="fas fa-search"></i>
+      <% end %>
+    </div>
+  <% end %>
+</div>

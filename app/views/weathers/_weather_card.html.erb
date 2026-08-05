@@ -1,0 +1,49 @@
+<div class="weather-card">
+  <% if logged_in? && current_user.is_verified? %>
+    <% existing_fav = current_user.favorites.find_by(city_name: @climate['name']) %>
+    <button type="button" 
+            id="js-fav-btn"
+            class="btn-fav-toggle <%= 'is-favorite' if existing_fav %>"
+            data-city="<%= @climate['name'] %>"
+            data-fav-id="<%= existing_fav&.id %>">
+      <i class="<%= existing_fav ? 'fas fa-heart' : 'far fa-heart' %>"></i>
+    </button>
+  <% end %>
+
+  <div class="temp-box">      
+    <span class="temperature"><%= @climate['main']['temp'].round %>°C</span>
+  </div>    
+
+  <div class="weather-header">
+    <div class="city-title-wrapper">
+      <h2><%= @climate['name'] %>, <%= @climate['sys']['country'] %></h2>
+    </div>
+
+    <p class="description"><%= @climate['weather'][0]['description'].capitalize %></p>
+    <div class="weather-icon">
+      <% main_weather = @climate['weather'][0]['main'] %>
+      <% case main_weather %>
+      <% when 'Clear' %>
+        <i class="fas fa-sun icon-sun"></i>
+      <% when 'Clouds' %>
+        <i class="fas fa-cloud-sun icon-cloud-sun"></i>
+      <% when 'Rain', 'Drizzle' %>
+        <i class="fas fa-cloud-showers-heavy icon-rain"></i>
+      <% when 'Thunderstorm' %>
+        <i class="fas fa-bolt icon-thunder"></i>
+      <% when 'Snow' %>
+        <i class="fas fa-snowflake icon-snow"></i>
+      <% else %>
+        <i class="fas fa-cloud icon-cloud"></i>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="weather-body">     
+    <div class="weather-details">
+      <p>Cảm giác như: <strong><%= @climate['main']['feels_like'].round %>°C</strong></p>
+      <p>Độ ẩm: <strong><%= @climate['main']['humidity'] %>%</strong></p>
+      <p>Tốc độ gió: <strong><%= @climate['wind']['speed'] %> m/s</strong></p>
+    </div>
+  </div>
+</div>

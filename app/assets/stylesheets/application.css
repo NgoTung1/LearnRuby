@@ -2,10 +2,13 @@ body, html {
   margin: 0;
   padding: 0;
   font-family: 'Inter', serif;
-  height: 100vh;
+  min-height: 100vh;
   color: #FFFFFF;
-  align-items: center;
-  justify-content: center;
+  display: flex;
+  flex-direction: column;
+}
+main.container {
+  flex: 1; 
 }
 /* Header Layout */
 .navbar {
