@@ -45,6 +45,26 @@ class WeatherApiService
         result
     end
 
+    def self.location_call(lat, lon)
+        return {success: false, error: "Thiếu tọa độ"} if lat.blank? || lon.blank?
+        api_key = ENV['WEATHER_API']
+        uri = URI("https://api.openweathermap.org/data/2.5/weather?lat=#{lat}&lon=#{lon}&appid=#{api_key}&units=metric&lang=vi")
+        response = Net::HTTP.get_response(uri)
+        if response.is_a?(Net::HTTPSuccess)
+            {
+                success: true,
+                data: JSON.parse(response.body)
+            }
+        else
+            {
+                success: false,
+                error: "Lỗi không kết nối được API (#{response.code})"
+            }
+        end
+    rescue StandardError => e
+        { success: false, error: "Lỗi kết nối mạng: #{e.message}" }
+    end
+
     def multiple_call
         uri = URI("#{BULK_URL}")
         response = Net::HTTP.get_response(uri)

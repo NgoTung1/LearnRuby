@@ -56,5 +56,52 @@ RSpec.describe "Weathers", type: :request do
         expect(response.body).to include("xyz123")
       end
     end
+    
+    context 'khi truyền params lat và lon (lấy thời tiết theo vị trí GPS/IP)' do
+      let(:fake_location_data) do
+        {
+          'name' => 'Hà Nội',
+          'sys' => { 'country' => 'VN' },
+          'main' => {
+            'temp' => 31,
+            'feels_like' => 33,
+            'humidity' => 70
+          },
+          'weather' => [
+            { 'main' => 'Clear', 'description' => 'nắng nóng' }
+          ],
+          'wind' => { 'speed' => 3.0 }
+        }
+      end
+
+      context 'khi lấy vị trí thành công' do
+        before do
+          allow(WeatherApiService).to receive(:location_call).with('21.0285', '105.8542').and_return(
+            { success: true, data: fake_location_data }
+          )
+        end
+
+        it 'hiển thị thông tin thời tiết dựa theo tọa độ gửi lên' do
+          get root_path, params: { lat: '21.0285', lon: '105.8542' }
+          expect(response).to have_http_status(:success)
+          expect(response.body).to include("Hà Nội")
+          expect(response.body).to include("31°C")
+        end
+      end
+
+      context 'khi lấy vị trí thất bại' do
+        before do
+          allow(WeatherApiService).to receive(:location_call).and_return(
+            { success: false, error: "Lỗi không kết nối được API" }
+          )
+        end
+
+        it 'hiển thị thông báo lỗi trên màn hình' do
+          get root_path, params: { lat: '21.0285', lon: '105.8542' }
+          expect(response).to have_http_status(:success)
+          expect(response.body).to include("Lỗi không kết nối được API")
+        end
+      end
+    end
   end
 end

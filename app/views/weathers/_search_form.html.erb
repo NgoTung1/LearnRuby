@@ -12,4 +12,62 @@
       <% end %>
     </div>
   <% end %>
+
+  <% if logged_in? %>
+    <div class="location-btn">
+      <button type="button" id="location-button">
+        <i class="fas fa-location-arrow"></i> Xem thời tiết tại vị trí của tôi
+      </button>
+    </div>
+  <% end %>
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const locationBtn = document.getElementById("location-button");
+    if (!locationBtn) return;
+
+    locationBtn.addEventListener("click", () => {
+      const originalText = locationBtn.innerHTML;
+      locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xác định vị trí...';
+      locationBtn.disabled = true;
+
+      const redirectToWeather = (lat, lon) => {
+        window.location.href = `/?lat=${lat}&lon=${lon}`;
+      };
+
+      const fetchByIP = async () => {
+        try {
+          const res = await fetch("https://ipwho.is/");
+          const data = await res.json();
+          if (data.success && data.latitude && data.longitude) {
+            redirectToWeather(data.latitude, data.longitude);
+          } else {
+            alert("Không thể định vị được vị trí qua IP.");
+            locationBtn.innerHTML = originalText;
+            locationBtn.disabled = false;
+          }
+        } catch (err) {
+          alert("Không thể kết nối dịch vụ vị trí.");
+          locationBtn.innerHTML = originalText;
+          locationBtn.disabled = false;
+        }
+      };
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            redirectToWeather(position.coords.latitude, position.coords.longitude);
+          },
+          (error) => {
+            console.warn("GPS bị chặn/timeout, tự động chuyển sang IP...", error.message);
+            fetchByIP();
+          },
+          { timeout: 3000, maximumAge: 0 }
+        );
+      } else {
+        fetchByIP();
+      }
+    });
+  });
+</script>

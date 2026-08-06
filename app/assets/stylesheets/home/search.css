@@ -65,3 +65,15 @@
 .btn-search:hover {
   background-color: #1d4ed8;
 }
+
+.location-btn {
+  margin-top: 12px;
+}
+
+#location-button {
+  width: auto; 
+  padding: 10px 20px; 
+  border-radius: 20px; 
+  cursor: pointer; 
+  gap: 8px;
+}
