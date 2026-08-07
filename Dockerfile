@@ -2,7 +2,7 @@ FROM ruby:2.6.5
 RUN echo "deb http://archive.debian.org/debian buster main" > /etc/apt/sources.list && \
     echo "Acquire::Check-Valid-Until \"false\";" > /etc/apt/apt.conf.d/10no--check-valid-until
     
-RUN apt-get update -qq && apt-get install -y default-mysql-client
+RUN apt-get update -qq && apt-get install -y default-mysql-client cron
 
 WORKDIR /myapp
 

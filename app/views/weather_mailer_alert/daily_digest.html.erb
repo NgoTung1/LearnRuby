@@ -1,0 +1,29 @@
+<h2>Xin chào <%= @user.email %>,</h2>
+<p>Dưới đây là <strong>Bản tin thời tiết hôm nay</strong> cho các thành phố trong danh sách Yêu thích của bạn:</p>
+
+<table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+  <thead>
+    <tr style="background-color: #d1ecf1; color: #0c5460;">
+      <th>Thành phố</th>
+      <th>Thời tiết</th>
+      <th>Nhiệt độ</th>
+      <th>Cảm giác như</th>
+      <th>Độ ẩm</th>
+      <th>Tốc độ gió</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @weather_list.each do |weather| %>
+      <tr>
+        <td><strong><%= weather['name'] %></strong></td>
+        <td><%= weather.dig('weather', 0, 'description')&.capitalize %></td>
+        <td><%= weather.dig('main', 'temp') %>°C</td>
+        <td><%= weather.dig('main', 'feels_like') %>°C</td>
+        <td><%= weather.dig('main', 'humidity') %>%</td>
+        <td><%= weather.dig('wind', 'speed') %> m/s</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p style="margin-top: 20px;">Chúc bạn một ngày mới làm việc vui vẻ và hiệu quả!</p>

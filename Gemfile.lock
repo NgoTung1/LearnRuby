@@ -67,6 +67,7 @@ GEM
       msgpack (~> 1.2)
     builder (3.3.0)
     byebug (11.1.3)
+    chronic (0.10.2)
     concurrent-ruby (1.3.4)
     crass (1.0.7)
     date (3.5.1)
@@ -234,6 +235,8 @@ GEM
       base64
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    whenever (1.1.2)
+      chronic (>= 0.6.3)
     zeitwerk (2.6.18)
 
 PLATFORMS
@@ -256,6 +259,7 @@ DEPENDENCIES
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
+  whenever
 
 RUBY VERSION
    ruby 2.6.5p114

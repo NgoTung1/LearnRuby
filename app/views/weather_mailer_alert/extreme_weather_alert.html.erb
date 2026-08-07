@@ -1,0 +1,27 @@
+<h2>Xin chào <%= @user.email %>,</h2>
+<p>Hệ thống <strong>Weather on Rails</strong> phát hiện điều kiện thời tiết <strong>bất thường / nguy hiểm</strong> tại các thành phố trong danh sách Yêu thích của bạn:</p>
+
+<table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse; width: 100%; font-family: Arial, sans-serif;">
+  <thead>
+    <tr style="background-color: #f8d7da; color: #721c24;">
+      <th>Thành phố</th>
+      <th>Trạng thái</th>
+      <th>Nhiệt độ</th>
+      <th>Tốc độ gió</th>
+      <th>Cảnh báo & Lời khuyên</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @alerts.each do |alert| %>
+      <tr>
+        <td><strong><%= alert[:city] %></strong></td>
+        <td><%= alert[:condition] %></td>
+        <td><%= alert[:temp] %>°C</td>
+        <td><%= alert[:wind] %> m/s</td>
+        <td style="color: #d9534f; font-weight: bold;"><%= alert[:advice] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p style="margin-top: 20px;">Vui lòng chú ý an toàn và chuẩn bị phương án khi di chuyển ngoài trời!</p>

@@ -45,3 +45,4 @@ gem 'concurrent-ruby', '1.3.4'
 gem 'ffi', '1.15.5'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
+gem 'whenever', require: false
