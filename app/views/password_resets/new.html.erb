@@ -1,0 +1,37 @@
+<% content_for :extra_css do %>
+  <%= stylesheet_link_tag 'forgot_password', media: 'all' %>
+<% end %>
+
+<div class="forgot-container">
+  <div class="forgot-box">
+    <div class="forgot-header">
+      <h1>Quên mật khẩu</h1>
+      <h2>Nhập email để nhận link đặt lại mật khẩu</h2>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error"><%= flash[:alert] %></div>
+    <% end %>
+    <% if flash[:notice] %>
+      <div class="alert alert-success"><%= flash[:notice] %></div>
+    <% end %>
+
+    <%= form_with(url: forgot_password_path, local: true, class: "forgot-form") do |f| %>
+      <div class="form-group">
+        <%= f.label :email, "Email", class: "form-label" %>
+        <div class="input-wrapper">
+          <%= image_tag 'Envelope.svg', class: 'icon left-icon' %>
+          <%= f.email_field :email, class: "form-input with-left-icon", placeholder: "Nhập email của bạn", required: true %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Gửi email đặt lại", class: "forgot-btn-submit" %>
+      </div>
+    <% end %>
+
+    <div class="forgot-footer">
+      <p style="margin-top: 24px;"><%= link_to "Quay lại đăng nhập", login_path %></p>
+    </div>
+  </div>
+</div>

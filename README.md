@@ -9,13 +9,14 @@
 * **Xác thực người dùng (Authentication):**
   * Đăng ký tài khoản mới và xác minh qua mã **OTP**.
   * Đăng nhập / Đăng xuất an toàn.
+  * Hỗ trợ chức năng Reset Password khi quên mật khẩu.
   * Hỗ trợ đăng nhập nhanh bằng tài khoản **Google (OAuth)**.
 * **Tra cứu thời tiết:** Tìm kiếm và xem thông tin thời tiết chi tiết theo thành phố, tra cứu thời tiết dựa trên vị trí hiện tại của người dùng.
 * **Quản lý thành phố yêu thích (Favorites):** Lưu các thành phố thường xuyên theo dõi vào danh sách yêu thích để xem nhanh.
 * **Lịch sử tìm kiếm (History):** Tự động lưu và cho phép xem lại danh sách các thành phố đã tra cứu trước đó.
 * **Dự báo và cảnh báo thời tiết qua email:** Tự động gửi cảnh báo thời tiết cực đoan, bất thường và dự báo thời tiết hàng ngày qua email của người dùng
 
-## 📸 Giao diện minh họa
+## Giao diện minh họa
 
 ### 1. Trang chủ & Tra cứu thời tiết (Chưa đăng nhập)
 ![Trang chủ thời tiết](app/assets/images/weather-page-not-login.JPG)

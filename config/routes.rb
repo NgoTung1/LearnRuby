@@ -13,6 +13,11 @@ Rails.application.routes.draw do
   get '/auth/:provider/callback', to: 'sessions#google_login'
   get '/auth/failure', to: redirect('/login')
 
+  get  'forgot_password', to: 'password_resets#new'
+  post 'forgot_password', to: 'password_resets#create'
+  get  'reset_password',  to: 'password_resets#edit'
+  post 'reset_password',  to: 'password_resets#update'
+
   get 'history', to: 'histories#index'
 
   get 'favorites', to: 'favourites#index', as: 'favorites'

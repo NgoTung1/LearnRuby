@@ -1,0 +1,72 @@
+<% content_for :extra_css do %>
+  <%= stylesheet_link_tag 'reset_password', media: 'all' %>
+<% end %>
+
+<div class="reset-container">
+  <div class="reset-box">
+    <div class="reset-header">
+      <h1>Đặt lại mật khẩu</h1>
+      <h2>Nhập mật khẩu mới cho tài khoản của bạn</h2>
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="alert alert-error"><%= flash[:alert] %></div>
+    <% end %>
+
+    <%= form_with(url: reset_password_path, local: true, class: "reset-form") do |f| %>
+      <%= hidden_field_tag :token, params[:token] %>
+
+      <div class="form-group">
+        <%= f.label :password, "Mật khẩu mới", class: "form-label" %>
+        <div class="input-wrapper">
+          <%= image_tag 'Lock.svg', class: 'icon left-icon' %>
+          <%= f.password_field :password, class: "form-input with-both-icons", placeholder: "Nhập mật khẩu mới (ít nhất 6 ký tự)", required: true, id: "password-input" %>
+          <%= image_tag 'Eye.svg', class: 'icon right-icon', id: 'toggle-password' %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Xác nhận mật khẩu", class: "form-label" %>
+        <div class="input-wrapper">
+          <%= image_tag 'Lock.svg', class: 'icon left-icon' %>
+          <%= f.password_field :password_confirmation, class: "form-input with-both-icons", placeholder: "Nhập lại mật khẩu mới", required: true, id: "password-confirmation-input" %>
+          <%= image_tag 'Eye.svg', class: 'icon right-icon', id: 'toggle-password-confirmation' %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit "Đặt lại mật khẩu", class: "reset-btn-submit" %>
+      </div>
+    <% end %>
+
+    <div class="reset-footer">
+      <p style="margin-top: 24px;"><%= link_to "← Quay lại đăng nhập", login_path %></p>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const togglePassword = document.getElementById("toggle-password");
+    const passwordInput = document.getElementById("password-input");
+
+    if (togglePassword && passwordInput) {
+      togglePassword.addEventListener("click", function() {
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type);
+        this.style.opacity = type === "text" ? "0.5" : "1";
+      });
+    }
+
+    const toggleConfirm = document.getElementById("toggle-password-confirmation");
+    const confirmInput = document.getElementById("password-confirmation-input");
+
+    if (toggleConfirm && confirmInput) {
+      toggleConfirm.addEventListener("click", function() {
+        const type = confirmInput.getAttribute("type") === "password" ? "text" : "password";
+        confirmInput.setAttribute("type", type);
+        this.style.opacity = type === "text" ? "0.5" : "1";
+      });
+    }
+  });
+</script>

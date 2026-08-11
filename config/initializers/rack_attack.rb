@@ -14,4 +14,10 @@ class Rack::Attack
       req.ip
     end
   end
+
+  throttle('password_reset/ip', limit: 3, period: 1.minute) do |req|
+    if req.path == '/forgot_password' && req.post?
+      req.ip
+    end
+  end
 end
