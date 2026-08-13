@@ -4,8 +4,8 @@ require 'json'
 class GeminiService
   API_URL = "https://generativelanguage.googleapis.com/v1beta/interactions"
 
-  def initialize(api_key = nil)
-    @api_key = api_key || ENV['GEMINI_API_KEY']
+  def initialize
+    @api_key = ENV['GEMINI_API_KEY']
   end
 
   def generate(system_prompt, user_message)

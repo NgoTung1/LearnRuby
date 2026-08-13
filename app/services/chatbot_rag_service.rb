@@ -53,7 +53,7 @@ class ChatbotRagService
       wind = data['wind'] || {}
 
       weather_context = <<~CONTEXT
-        DỮ LIỆU THỜI TIẾT THỰC TẾ TẠI #{city.upcase} (CẬP NHẬT REAL-TIME):
+        DỮ LIỆU THỜI TIẾT THỰC TẾ TẠI #{city.upcase}:
         - Nhiệt độ hiện tại: #{main['temp']}°C (Cảm giác như: #{main['feels_like']}°C)
         - Nhiệt độ thấp nhất: #{main['temp_min']}°C / Cao nhất: #{main['temp_max']}°C
         - Tình trạng: #{weather_info['description']}
@@ -73,7 +73,7 @@ class ChatbotRagService
       1. CHỈ trả lời dựa trên dữ liệu thời tiết thực tế được cung cấp bên dưới. KHÔNG BAO GIỜ bịa ra số liệu.
       2. Trả lời bằng Tiếng Việt, thân thiện, ngắn gọn (tối đa 3-4 câu).
       3. Đưa ra lời khuyên thiết thực: nên mặc gì, mang theo gì (ô, kính râm...), có nên ra ngoài không.
-      4. Sử dụng emoji phù hợp để sinh động hơn (🌤️ ☔ 🧥 🕶️...).
+      4. Sử dụng emoji phù hợp để sinh động hơn.
       5. Nếu người dùng hỏi ngoài chủ đề thời tiết, hãy lịch sự từ chối và gợi ý họ hỏi về thời tiết.
 
       #{weather_context}
