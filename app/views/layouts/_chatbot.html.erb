@@ -1,0 +1,126 @@
+<button class="chatbot-bubble" id="chatbot-toggle" title="Chat với Weather Bot">
+  <i class="fas fa-robot"></i>
+</button>
+
+<div class="chatbot-window" id="chatbot-window">
+  <div class="chatbot-header">
+    <div class="chatbot-header-info">
+      <i class="fas fa-robot"></i>
+      <span>Weather Bot</span>
+    </div>
+    <button class="chatbot-close" id="chatbot-close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+
+  <div class="chatbot-messages" id="chatbot-messages">
+    <div class="chat-msg bot">
+      Xin chào! Tôi là <b>Weather Bot</b>. Hãy hỏi tôi về thời tiết bất kỳ thành phố nào nhé!
+      <br>Ví dụ: <i>"Hà Nội hôm nay có mưa không?"</i>
+    </div>
+  </div>
+
+  <div class="chatbot-input-area">
+    <input type="text" id="chatbot-input" placeholder="Hỏi về thời tiết..." autocomplete="off">
+    <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
+  </div>
+</div>
+
+<script>
+(function() {
+  const toggleBtn   = document.getElementById('chatbot-toggle');
+  const chatWindow  = document.getElementById('chatbot-window');
+  const closeBtn    = document.getElementById('chatbot-close');
+  const messagesDiv = document.getElementById('chatbot-messages');
+  const inputField  = document.getElementById('chatbot-input');
+  const sendBtn     = document.getElementById('chatbot-send');
+
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+  toggleBtn.addEventListener('click', function() {
+    chatWindow.classList.toggle('open');
+    if (chatWindow.classList.contains('open')) {
+      inputField.focus();
+    }
+  });
+  closeBtn.addEventListener('click', function() {
+    chatWindow.classList.remove('open');
+  });
+
+  function addMessage(text, sender) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('chat-msg', sender);
+    msgDiv.innerHTML = text;
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;  
+    return msgDiv;
+  }
+
+  function showTyping() {
+    const typingDiv = document.createElement('div');
+    typingDiv.classList.add('chat-msg', 'bot', 'typing');
+    typingDiv.id = 'chatbot-typing';
+    typingDiv.innerHTML = '<span></span><span></span><span></span>';
+    messagesDiv.appendChild(typingDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  }
+  function removeTyping() {
+    const el = document.getElementById('chatbot-typing');
+    if (el) el.remove();
+  }
+
+  function getCurrentCity() {
+    const searchInput = document.querySelector('input[name="city"]');
+    return searchInput ? searchInput.value : '';
+  }
+
+  async function sendMessage() {
+    const message = inputField.value.trim();
+    if (!message) return;
+
+    addMessage(message, 'user');
+    inputField.value = '';
+    sendBtn.disabled = true;
+
+    showTyping();
+
+    try {
+      const response = await fetch('/chatbot/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
+        body: JSON.stringify({
+          message: message,
+          current_city: getCurrentCity()
+        })
+      });
+
+      removeTyping();
+
+      if (response.ok) {
+        const data = await response.json();
+        addMessage(data.reply || 'Xin lỗi, có lỗi xảy ra.', 'bot');
+      } else {
+        addMessage(' Lỗi kết nối server, vui lòng thử lại.', 'bot');
+      }
+    } catch (err) {
+      removeTyping();
+      addMessage(' Không thể kết nối, kiểm tra mạng và thử lại.', 'bot');
+    }
+
+    sendBtn.disabled = false;
+    inputField.focus();
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+
+  inputField.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+})();
+</script>
