@@ -6,7 +6,7 @@
   height: 60px;
   border-radius: 50%;
   background: linear-gradient(135deg, #0058BE, #00A3FF);
-  color: #fff;
+  color: #FFFFFF;
   border: none;
   cursor: pointer;
   box-shadow: 0 6px 20px rgba(0, 88, 190, 0.45);
@@ -28,7 +28,7 @@
   right: 28px;
   width: 380px;
   max-height: 520px;
-  background: #ffffff;
+  background: #FFFFFF;
   border-radius: 16px;
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
   display: none;
@@ -68,7 +68,7 @@
 .chatbot-close {
   background: none;
   border: none;
-  color: #fff;
+  color: #FFFFFF;
   font-size: 20px;
   cursor: pointer;
   opacity: 0.8;
@@ -86,7 +86,7 @@
   flex-direction: column;
   gap: 12px;
   max-height: 340px;
-  background: #f7f9fc;
+  background: #F7F9FC;
 }
 
 .chat-msg {
@@ -96,7 +96,7 @@
   font-size: 14px;
   line-height: 1.5;
   word-wrap: break-word;
-  color: #1a1a2e;
+  color: #1A1A2E;
 }
 .chat-msg.user {
   align-self: flex-end;

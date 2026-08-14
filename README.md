@@ -11,10 +11,11 @@
   * Đăng nhập / Đăng xuất an toàn.
   * Hỗ trợ chức năng Reset Password khi quên mật khẩu.
   * Hỗ trợ đăng nhập nhanh bằng tài khoản **Google (OAuth)**.
-* **Tra cứu thời tiết:** Tìm kiếm và xem thông tin thời tiết chi tiết theo thành phố, tra cứu thời tiết dựa trên vị trí hiện tại của người dùng.
+* **Tra cứu thời tiết:** Tìm kiếm và xem thông tin thời tiết chi tiết theo thành phố, tra cứu thời tiết dựa trên vị trí hiện tại của người dùng, đồng thời sử dụng cache để tối ưu limit gọi tới API và trả về kết quả tìm kiếm nhanh nhất.
 * **Quản lý thành phố yêu thích (Favorites):** Lưu các thành phố thường xuyên theo dõi vào danh sách yêu thích để xem nhanh.
 * **Lịch sử tìm kiếm (History):** Tự động lưu và cho phép xem lại danh sách các thành phố đã tra cứu trước đó.
 * **Dự báo và cảnh báo thời tiết qua email:** Tự động gửi cảnh báo thời tiết cực đoan, bất thường và dự báo thời tiết hàng ngày qua email của người dùng
+* **Chatbot hỗ trợ xem thời tiết và gợi ý khi ra đường:** Hỏi đáp với chatbot về nhiệt độ, cảm nhận và nhận những lời khuyên khi di chuyển ra bên ngoài
 
 ## Giao diện minh họa
 
@@ -39,6 +40,8 @@
 ### 7. Lịch sử tìm kiếm (History)
 ![Trang lịch sử tìm kiếm](app/assets/images/histories.JPG)
 
+### 8. Chatbot
+![Modal Chatbot](app/assets/images/chatbot.JPG)
 ---
 
 ## Cấu hình Biến Môi Trường (.env)
