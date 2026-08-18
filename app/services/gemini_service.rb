@@ -16,7 +16,7 @@ class GeminiService
       system_instruction: system_prompt,
       input: user_message,
       generation_config: {
-        max_output_tokens: 1024
+        max_output_tokens: 512
       }
     }
 
