@@ -1,15 +1,23 @@
 class ChatbotRagService
+  POPULAR_CITIES = [
+    "Hà Nội", "Hanoi", "Hồ Chí Minh", "Sài Gòn", "Saigon", "TPHCM", "TP.HCM",
+    "Đà Nẵng", "Danang", "Hải Phòng", "Cần Thơ", "Huế", "Nha Trang", "Đà Lạt",
+    "Vũng Tàu", "Quảng Ninh", "Hạ Long", "Thái Nguyên", "Bắc Ninh", "Nam Định", 
+    "Thanh Hóa", "Vinh", "Quy Nhơn", "Phan Thiết", "Phú Quốc", "Buôn Ma Thuột",
+    "Tokyo", "Seoul", "Bangkok", "Singapore", "Paris", "London", "New York"
+  ].freeze
+
   def initialize(user_message, current_city: nil)
-    @user_message = user_message
+    @user_message = user_message.to_s
     @current_city = current_city  
   end
 
   def call
     city = extract_city_from_message || @current_city || "Hanoi"
+    
     weather_result = WeatherApiService.fetch_cached(city)
 
     system_prompt = build_system_prompt(city, weather_result)
-
     gemini = GeminiService.new
     result = gemini.generate(system_prompt, @user_message)
 
@@ -23,23 +31,17 @@ class ChatbotRagService
   private
 
   def extract_city_from_message
-    extraction_prompt = <<~PROMPT
-      Nhiệm vụ của bạn là trích xuất TÊN THÀNH PHỐ hoặc TỈNH được nhắc đến trong câu người dùng.
-      QUY TẮC:
-      1. CHỈ in ra tên thành phố, KHÔNG có bất kỳ ký tự, dấu câu hay lời giải thích nào khác.
-      2. Tên thành phố có thể là tiếng Việt hoặc tiếng Anh (ví dụ: Hokkaido, Tokyo, Paris, Đà Nẵng).
-      3. Nếu trong câu KHÔNG CÓ thành phố nào được nhắc đến, CHỈ in ra đúng chữ "NONE".
-      
-      Câu của người dùng: "#{@user_message}"
-    PROMPT
+    return nil if @user_message.blank?
 
-    gemini = GeminiService.new
-    result = gemini.generate("Bạn là hệ thống trích xuất dữ liệu tự động.", extraction_prompt)
+    POPULAR_CITIES.each do |city_name|
+      if @user_message.downcase.include?(city_name.downcase)
+        return city_name
+      end
+    end
 
-    if result[:success]
-      extracted = result[:reply].to_s.strip
-      return nil if extracted.upcase == "NONE" || extracted.blank?
-      return extracted
+    if match = @user_message.match(/(?:ở|tại|thành phố|tp)\s+([^\?\.,!]+)/i)
+      extracted = match[1].to_s.strip.split.take(3).join(" ")
+      return extracted if extracted.present?
     end
 
     nil
