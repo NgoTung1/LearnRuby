@@ -62,4 +62,5 @@ RSpec.configure do |config|
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
   OmniAuth.config.test_mode = true
+  ActiveJob::Base.queue_adapter = :test
 end

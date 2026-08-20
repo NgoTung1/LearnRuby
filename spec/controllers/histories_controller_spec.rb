@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe HistoriesController, type: :controller do
-  let(:user) { User.create(email: 'test@example.com', password: 'password123') }
+  let(:user) { User.create(email: 'test@example.com', password: 'password123', is_verified: true) }
 
   describe 'GET #index' do
     context 'Khi người dùng đăng nhập' do
