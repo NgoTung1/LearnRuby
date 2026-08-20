@@ -122,3 +122,4 @@ Rails.application.configure do
       ssl: true
     }
   end
+end
