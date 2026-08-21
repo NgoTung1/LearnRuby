@@ -1,4 +1,5 @@
 # Weather on Rails
+**Link deploy** https://weather-on-rails-a6ez.onrender.com
 
 **Weather on Rails** là ứng dụng web cho phép người dùng tra cứu thông tin thời tiết thời gian thực, quản lý các thành phố yêu thích và xem lại lịch sử tìm kiếm. Ứng dụng được xây dựng trên nền tảng **Ruby on Rails 6** kết hợp với **MySQL** và được container hóa bằng **Docker**.
 
