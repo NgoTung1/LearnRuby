@@ -86,6 +86,9 @@ GEM
     globalid (1.1.0)
       activesupport (>= 5.0)
     hashie (5.0.0)
+    httparty (0.21.0)
+      mini_mime (>= 1.0.0)
+      multi_xml (>= 0.5.2)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     jwt (3.2.0)
@@ -197,6 +200,8 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.11.1)
       ffi (~> 1.0)
+    resend (1.1.0)
+      httparty (>= 0.21.0)
     rspec-core (3.13.6)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.5)
@@ -263,6 +268,7 @@ DEPENDENCIES
   rack-attack
   rails (~> 6.0.0)
   rails-controller-testing
+  resend
   rspec-rails
   spring
   spring-watcher-listen (~> 2.0.0)
