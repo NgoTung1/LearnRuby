@@ -107,19 +107,30 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = {host: 'weather-on-rails-a6ez.onrender.com', protocol: 'https'}
 
-  if ENV['RESEND_API_KEY'].present?
+  if ENV['BREVO_SMTP_KEY'].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      address:              'smtp-relay.brevo.com',
+      port:                 587,
+      domain:               'brevo.com',
+      user_name:            ENV['BREVO_USERNAME'],
+      password:             ENV['BREVO_SMTP_KEY'],
+      authentication:       'login',
+      enable_starttls_auto: true
+    }
+  elsif ENV['RESEND_API_KEY'].present?
     config.action_mailer.delivery_method = :resend
     Resend.api_key = ENV['RESEND_API_KEY']
   else
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      address: 'smtp.gmail.com',
-      port: 465,
-      domain: 'gmail.com',
-      user_name: ENV['GMAIL'],
-      password: ENV['GMAIL_PASSWORD'],
+      address:        'smtp.gmail.com',
+      port:           465,
+      domain:         'gmail.com',
+      user_name:      ENV['GMAIL'],
+      password:       ENV['GMAIL_PASSWORD'],
       authentication: 'plain',
-      ssl: true
+      ssl:            true
     }
   end
 end

@@ -55,13 +55,14 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.default_url_options = {host: 'localhost', port: 3000}
 
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'smtp.gmail.com',
-    port: 587,
-    domain: 'gmail.com',
-    user_name: ENV['GMAIL'],
-    password: ENV['GMAIL_PASSWORD'],
-    authentication: 'plain',
+    address:              'smtp-relay.brevo.com',
+    port:                 587,
+    domain:               'brevo.com',
+    user_name:            ENV['BREVO_USERNAME'],
+    password:             ENV['BREVO_SMTP_KEY'],
+    authentication:       'login',
     enable_starttls_auto: true
   }
 

@@ -1,6 +1,6 @@
 class WeathersController < ApplicationController
     def index
-        city = params[:city] || ""
+        city = (params[:city] || "").strip().squeeze(" ")
         lat = params[:lat] || ""
         lon = params[:lon] || ""
         if city.present?

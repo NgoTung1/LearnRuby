@@ -24,7 +24,13 @@ class ChatbotRagService
     if result[:success]
       { success: true, reply: result[:reply], city: city }
     else
-      { success: false, reply: "Xin lỗi, tôi đang gặp sự cố. Vui lòng thử lại sau! (#{result[:error]})" }
+      Rails.logger.error("[Chatbot Error] #{result[:error]}")
+      user_msg = if result[:error].to_s.include?("quota") || result[:error].to_s.include?("RESOURCE_EXHAUSTED")
+        "Trợ lý AI đang tạm thời quá tải lượt hỏi, bạn vui lòng đợi khoảng 1 phút rồi thử lại nhé! 😊"
+      else
+        "Xin lỗi, tôi đang gặp sự cố kết nối. Vui lòng thử lại sau ít phút!"
+      end
+      { success: false, reply: user_msg }
     end
   end
 
