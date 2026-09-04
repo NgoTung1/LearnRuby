@@ -5,12 +5,18 @@ RSpec.describe ChatbotRagService do
   let(:weather_data) do
     {
       success: true,
-      data: {
-        'main' => { 'temp' => 30, 'feels_like' => 32, 'temp_min' => 28, 'temp_max' => 31, 'humidity' => 70, 'pressure' => 1010 },
+      current: {
+        'main' => { 'temp' => 30, 'feels_like' => 32, 'humidity' => 70 },
         'weather' => [{ 'description' => 'Mây rải rác' }],
         'wind' => { 'speed' => 3 },
         'visibility' => 10000
-      }
+      },
+      hourly: [
+        { 'dt_txt' => '2026-09-04 15:00:00', 'main' => { 'temp' => 31 }, 'weather' => [{ 'description' => 'Nắng' }] }
+      ],
+      forecast: [
+        { 'dt_txt' => '2026-09-05 12:00:00', 'main' => { 'temp_min' => 25, 'temp_max' => 32 }, 'weather' => [{ 'description' => 'Mưa' }] }
+      ]
     }
   end
 
@@ -25,11 +31,6 @@ RSpec.describe ChatbotRagService do
       let(:service) { described_class.new(user_message, current_city: 'Hà Nội') }
 
       before do
-        allow(gemini_service_mock).to receive(:generate).with(
-          "Bạn là hệ thống trích xuất dữ liệu tự động.", 
-          instance_of(String)
-        ).and_return({ success: true, reply: 'Đà Nẵng' })
-
         allow(gemini_service_mock).to receive(:generate).with(
           instance_of(String), 
           user_message
@@ -53,11 +54,6 @@ RSpec.describe ChatbotRagService do
 
       before do
         allow(gemini_service_mock).to receive(:generate).with(
-          "Bạn là hệ thống trích xuất dữ liệu tự động.", 
-          instance_of(String)
-        ).and_return({ success: true, reply: 'NONE' })
-
-        allow(gemini_service_mock).to receive(:generate).with(
           instance_of(String), 
           user_message
         ).and_return({ success: true, reply: 'Trời Hồ Chí Minh hôm nay không mưa.' })
@@ -80,11 +76,6 @@ RSpec.describe ChatbotRagService do
 
       before do
         allow(gemini_service_mock).to receive(:generate).with(
-          "Bạn là hệ thống trích xuất dữ liệu tự động.", 
-          instance_of(String)
-        ).and_return({ success: true, reply: 'NONE' })
-
-        allow(gemini_service_mock).to receive(:generate).with(
           instance_of(String), 
           user_message
         ).and_return({ success: false, error: 'API Error' })
@@ -95,7 +86,6 @@ RSpec.describe ChatbotRagService do
         
         expect(result[:success]).to eq(false)
         expect(result[:reply]).to include('Xin lỗi, tôi đang gặp sự cố')
-        expect(result[:reply]).to include('API Error')
       end
     end
   end

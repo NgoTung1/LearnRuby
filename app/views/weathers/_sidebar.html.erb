@@ -1,6 +1,6 @@
 <div class="sidebar">
   <div class="sidebar-card">
-    <h3><i class="fas fa-history"></i> Tìm kiếm gần đây</h3>
+    <h3><i class="fas fa-history"></i> 3 thành phố tìm kiếm gần đây</h3>
     <ul class="recent-list">
       <% if @side_histories.present? %>
         <% @side_histories.each do |item| %>
@@ -18,10 +18,10 @@
   </div>
 
   <div class="sidebar-card">
-    <h3><i class="fas fa-star"></i> Thành phố yêu thích</h3>
+    <h3><i class="fas fa-star"></i> 3 thành phố yêu thích gần đây</h3>
     <div class="favorite-tags">
       <% if current_user.favorites.present? %>
-        <% current_user.favorites.limit(4).each do |fav| %>
+        <% current_user.favorites.limit(3).each do |fav| %>
           <span class="tag"><%= fav.city_name %></span>
         <% end %>
       <% else %>

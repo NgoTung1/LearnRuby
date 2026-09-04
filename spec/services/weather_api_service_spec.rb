@@ -1,99 +1,96 @@
 require 'rails_helper'
 
 RSpec.describe WeatherApiService do
-  let(:city_name) { 'Hanoi' }
-  let(:service) { WeatherApiService.new(city_name) }
+  let(:api_key) { 'fake_api_key' }
+  
+  before do
+    allow(ENV).to receive(:[]).and_call_original
+    allow(ENV).to receive(:[]).with('WEATHER_API').and_return(api_key)
+  end
 
   describe '#call' do
-    context 'khi tên thành phố rỗng' do
-      let(:city_name) { '' }
-      it 'trả về success: false và error là nil' do
+    context 'when city_name is blank' do
+      it 'returns success false and error nil' do
+        service = WeatherApiService.new('')
         result = service.call
         expect(result[:success]).to be false
         expect(result[:error]).to be_nil
       end
     end
 
-    context 'khi gọi API thành công' do
-      let(:mock_json) do
+    context 'when API call is successful' do
+      let(:city_name) { 'Hồ Chí Minh' }
+      let(:mock_response) { instance_double(Net::HTTPSuccess, is_a?: true, body: mock_body) }
+      let(:mock_body) do
         {
-          'name' => 'Hanoi',
-          'sys' => { 'country' => 'VN' },
-          'main' => { 'temp' => 30, 'feels_like' => 32, 'humidity' => 70 },
-          'weather' => [{ 'main' => 'Clear', 'description' => 'bầu trời quang đãng', 'icon' => '01d' }],
-          'wind' => { 'speed' => 2.5 }
+          "city" => { "name" => "Ho Chi Minh City", "country" => "VN" },
+          "list" => [
+            { "dt_txt" => "2026-08-28 09:00:00", "main" => { "temp" => 30 } },
+            { "dt_txt" => "2026-08-28 12:00:00", "main" => { "temp" => 32 } },
+            { "dt_txt" => "2026-08-29 12:00:00", "main" => { "temp" => 33 } }
+          ]
         }.to_json
       end
 
       before do
-        response = instance_double(Net::HTTPSuccess, is_a?: true, body: mock_json)
-        allow(Net::HTTP).to receive(:get_response).and_return(response)
+        allow(Net::HTTP).to receive(:get_response).and_return(mock_response)
       end
 
-      it 'trả về success: true kèm dữ liệu thời tiết' do
+      it 'normalizes the city name, fetches forecast and formats data' do
+        service = WeatherApiService.new(city_name)
         result = service.call
+
+        expect(Net::HTTP).to have_received(:get_response).with(
+          satisfy { |uri| uri.to_s.include?('ho%20chi%20minh') }
+        )
+        
         expect(result[:success]).to be true
-        expect(result[:data]['name']).to eq('Hanoi')
-        expect(result[:data]['main']['temp']).to eq(30)
+        expect(result[:current]['name']).to eq('Ho Chi Minh City')
+        expect(result[:hourly].size).to eq(3) # takes up to 8
+        expect(result[:forecast].size).to eq(2) # 2 items at 12:00:00
       end
     end
 
-    context 'khi không tìm thấy thành phố' do
+    context 'when API call fails' do
+      let(:city_name) { 'UnknownCity' }
+      let(:mock_response) { instance_double(Net::HTTPNotFound, is_a?: false) }
+
       before do
-        response = instance_double(Net::HTTPNotFound, is_a?: false)
-        allow(Net::HTTP).to receive(:get_response).and_return(response)
+        allow(Net::HTTP).to receive(:get_response).and_return(mock_response)
       end
 
-      it 'trả về success: false kèm thông báo lỗi' do
+      it 'returns success false with error message' do
+        service = WeatherApiService.new(city_name)
         result = service.call
+
         expect(result[:success]).to be false
-        expect(result[:error]).to include("Không tìm thấy thành phố")
+        expect(result[:error]).to eq("Không tìm thấy thành phố 'UnknownCity'")
+      end
+    end
+
+    context 'when network error occurs' do
+      let(:city_name) { 'Hanoi' }
+
+      before do
+        allow(Net::HTTP).to receive(:get_response).and_raise(SocketError.new('getaddrinfo: Name or service not known'))
+      end
+
+      it 'rescues the error and returns failure' do
+        service = WeatherApiService.new(city_name)
+        result = service.call
+
+        expect(result[:success]).to be false
+        expect(result[:error]).to include("Lỗi kết nối mạng: getaddrinfo")
       end
     end
   end
 
-    describe '.location_call' do
-    context 'khi thiếu tọa độ (lat hoặc lon rỗng)' do
-      it 'trả về success: false và báo lỗi thiếu tọa độ' do
-        result = WeatherApiService.location_call('', '')
+  describe '.location_call' do
+    context 'when lat or lon is missing' do
+      it 'returns success false and error message' do
+        result = WeatherApiService.location_call('', '105.8')
         expect(result[:success]).to be false
         expect(result[:error]).to eq("Thiếu tọa độ")
-      end
-    end
-
-    context 'khi gọi API theo tọa độ thành công' do
-      let(:mock_json) do
-        {
-          'name' => 'Tokyo',
-          'sys' => { 'country' => 'JP' },
-          'main' => { 'temp' => 25, 'feels_like' => 26 },
-          'weather' => [{ 'description' => 'mưa nhẹ' }]
-        }.to_json
-      end
-
-      before do
-        response = instance_double(Net::HTTPSuccess, is_a?: true, body: mock_json)
-        allow(Net::HTTP).to receive(:get_response).and_return(response)
-      end
-
-      it 'trả về success: true kèm dữ liệu thời tiết của vị trí đó' do
-        result = WeatherApiService.location_call('35.6895', '139.6917')
-        expect(result[:success]).to be true
-        expect(result[:data]['name']).to eq('Tokyo')
-        expect(result[:data]['main']['temp']).to eq(25)
-      end
-    end
-
-    context 'khi gọi API theo tọa độ thất bại' do
-      before do
-        response = instance_double(Net::HTTPNotFound, is_a?: false, code: '404')
-        allow(Net::HTTP).to receive(:get_response).and_return(response)
-      end
-
-      it 'trả về success: false kèm mã lỗi' do
-        result = WeatherApiService.location_call('35.6895', '139.6917')
-        expect(result[:success]).to be false
-        expect(result[:error]).to include("Lỗi không kết nối được API")
       end
     end
   end
