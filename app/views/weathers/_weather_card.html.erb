@@ -1,24 +1,26 @@
 <% 
-def get_fa_icon(code)
-  case code
-  when /01/ then { class: "fas fa-sun", color: "#f59e0b" }
-  when /02/, /03/, /04/ then { class: "fas fa-cloud-sun", color: "#64748b" }
-  when /09/, /10/ then { class: "fas fa-cloud-showers-heavy", color: "#3b82f6" }
-  when /11/ then { class: "fas fa-bolt", color: "#eab308" }
-  when /13/ then { class: "fas fa-snowflake", color: "#38bdf8" }
-  else { class: "fas fa-cloud", color: "#94a3b8" }
-  end
-end 
+unless respond_to?(:get_fa_icon)
+  def get_fa_icon(code)
+    case code
+    when /01/ then { class: "fas fa-sun", color: "#f59e0b" }
+    when /02/, /03/, /04/ then { class: "fas fa-cloud-sun", color: "#64748b" }
+    when /09/, /10/ then { class: "fas fa-cloud-showers-heavy", color: "#3b82f6" }
+    when /11/ then { class: "fas fa-bolt", color: "#eab308" }
+    when /13/ then { class: "fas fa-snowflake", color: "#38bdf8" }
+    else { class: "fas fa-cloud", color: "#94a3b8" }
+    end
+  end 
+end
 
-# Hàm lấy tên thứ trong tuần (Tiếng Việt)
-def get_weekday(date_string)
-  days = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"]
-  days[Date.parse(date_string).wday]
+unless respond_to?(:get_weekday)
+  def get_weekday(date_string)
+    days = ["Chủ nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"]
+    days[Date.parse(date_string).wday]
+  end
 end
 %>
 
 <style>
-  /* ÉP BỎ CSS CACHE CŨ BẰNG !IMPORTANT */
   .home-container { max-width: 1500px !important; }
   .result-section { max-width: 100% !important; width: 100% !important; }
   
@@ -34,7 +36,6 @@ end
     gap: 30px;
   }
 
-  /* CHỈ KHI MÀN HÌNH CỰC TO (PC > 1300px) MỚI CHIA 2 CỘT */
   @media (min-width: 1300px) {
     .weather-dashboard {
       grid-template-columns: 1fr 450px; /* Cột trái linh hoạt, cột phải 450px để đủ chỗ hiện min/max */
@@ -45,10 +46,8 @@ end
 
 <div class="weather-dashboard">
   
-  <!-- CỘT TRÁI (Bao gồm Hiện tại + 24 giờ tới) -->
   <div class="weather-dashboard-left">
     
-    <!-- PHẦN 1: THỜI TIẾT HIỆN TẠI -->
     <div style="background: white; border-radius: 24px; padding: 35px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: relative; display: flex; flex-wrap: wrap; gap: 30px; align-items: center; justify-content: space-between;">
       
       <% if logged_in? && current_user.is_verified? %>
@@ -58,7 +57,6 @@ end
         </button>
       <% end %>
 
-      <!-- Nhiệt độ & Icon -->
       <div style="display: flex; gap: 25px; align-items: center; flex: 1; min-width: 300px;">
         <% icon_data = get_fa_icon(@climate['weather'][0]['icon']) %>
         <div style="width: 110px; height: 110px; display: flex; align-items: center; justify-content: center;">
@@ -71,7 +69,6 @@ end
         </div>
       </div>
 
-      <!-- Thông số chi tiết -->
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; background: #f8fafc; padding: 25px; border-radius: 20px; flex: 1; min-width: 250px;">
         <div style="display: flex; align-items: center; gap: 15px;">
           <i class="fas fa-temperature-half" style="color: #3b82f6; font-size: 22px; width: 25px; text-align: center;"></i>
@@ -104,7 +101,6 @@ end
       </div>
     </div>
 
-    <!-- PHẦN 2: DỰ BÁO 24 GIỜ -->
     <% if @hourly.present? %>
       <div style="background: white; border-radius: 24px; padding: 30px; border: 1px solid #e2e8f0; box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
         <h3 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 25px; margin-top: 0;">Dự báo hôm nay</h3>
@@ -133,13 +129,11 @@ end
             <% d_icon = get_fa_icon(day['weather'][0]['icon']) %>
             <div style="display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; background: #f8fafc; border-radius: 16px; border-left: 5px solid <%= d_icon[:color] %>;">
               
-              <!-- Thứ & Ngày -->
               <div style="display: flex; flex-direction: column; gap: 6px; width: 90px;">
                 <span style="font-weight: 800; color: #1e293b; font-size: 15px;"><%= get_weekday(day['dt_txt']) %></span>
                 <span style="font-size: 13px; color: #94a3b8; font-weight: 500;"><%= Date.parse(day['dt_txt']).strftime("%d/%m") %></span>
               </div>
               
-              <!-- Icon & Mô tả -->
               <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
                 <div style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
                   <i class="<%= d_icon[:class] %>" style="color: <%= d_icon[:color] %>; font-size: 26px;"></i>
@@ -147,7 +141,6 @@ end
                 <span style="font-size: 14px; color: #475569; text-transform: capitalize; font-weight: 600;"><%= day['weather'][0]['description'] %></span>
               </div>
               
-              <!-- Cao nhất / Thấp nhất -->
               <div style="display: flex; flex-direction: column; align-items: flex-end; width: 60px;">
                 <span style="font-weight: 900; font-size: 18px; color: #ef4444;"><%= day['main']['temp_max'].round %>°</span>
                 <span style="font-weight: 700; font-size: 14px; color: #3b82f6;"><%= day['main']['temp_min'].round %>°</span>

@@ -1,0 +1,9 @@
+<% if @climate.present? %>
+  <%= render 'weather_card' %>
+<% elsif @error.present? %>
+  <div class="alert-error">
+    <p><i class="fas fa-exclamation-circle"></i> <%= @error %></p>
+  </div>
+<% else %>
+  <%= render 'empty_state' %>
+<% end %>

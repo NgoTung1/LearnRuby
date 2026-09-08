@@ -7,16 +7,8 @@
   <div class="main-content">
     <%= render 'search_form' %>
 
-    <div class="result-section">
-      <% if @climate.present? %>
-        <%= render 'weather_card' %>
-      <% elsif @error.present? %>
-        <div class="alert-error">
-          <p><i class="fas fa-exclamation-circle"></i> <%= @error %></p>
-        </div>
-      <% else %>
-        <%= render 'empty_state' %>
-      <% end %>
+    <div class="result-section" id="weather-result-section">
+      <%= render 'result' %>
     </div>
   </div> 
 
@@ -24,29 +16,175 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const favBtn = document.getElementById("js-fav-btn");
-  if (!favBtn) return;
+(function() {
+  async function fetchWeather(paramsObj, updateHistory = true) {
+    const resultSection = document.getElementById("weather-result-section");
+    const searchBtn = document.getElementById("weather-search-btn");
+    const searchIcon = document.getElementById("weather-search-icon");
+    const searchInput = document.getElementById("weather-search-input");
 
-  favBtn.addEventListener("click", async function (e) {
+    if (searchBtn && searchIcon) {
+      searchBtn.disabled = true;
+      searchIcon.className = "fas fa-spinner fa-spin";
+    }
+
+    if (resultSection) {
+      resultSection.style.transition = "opacity 0.2s ease";
+      resultSection.style.opacity = "0.5";
+      resultSection.style.pointerEvents = "none";
+    }
+
+    try {
+      const urlParams = new URLSearchParams();
+      for (const [key, value] of Object.entries(paramsObj)) {
+        if (value !== undefined && value !== null && value !== "") {
+          urlParams.append(key, value);
+        }
+      }
+
+      const requestUrl = `/?${urlParams.toString()}`;
+      const response = await fetch(requestUrl, {
+        headers: {
+          "Accept": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Server status ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (resultSection && data.html) {
+        resultSection.innerHTML = data.html;
+      }
+
+      const sidebarEl = document.getElementById("weather-sidebar");
+      if (sidebarEl && data.sidebar_html) {
+        sidebarEl.outerHTML = data.sidebar_html;
+      }
+
+      if (data.city && searchInput) {
+        searchInput.value = data.city;
+      }
+
+      if (updateHistory) {
+        const newUrl = new URL(window.location.origin + window.location.pathname);
+        for (const [key, value] of urlParams.entries()) {
+          newUrl.searchParams.set(key, value);
+        }
+        window.history.pushState(paramsObj, "", newUrl.toString());
+      }
+
+      return data;
+    } catch (err) {
+      console.error("Lỗi khi tải dữ liệu thời tiết:", err);
+      if (resultSection) {
+        resultSection.innerHTML = `
+          <div class="alert-error">
+            <p><i class="fas fa-exclamation-circle"></i> Đã xảy ra lỗi khi tải dữ liệu thời tiết. Vui lòng thử lại!</p>
+          </div>
+        `;
+      }
+    } finally {
+      if (resultSection) {
+        resultSection.style.opacity = "1";
+        resultSection.style.pointerEvents = "auto";
+      }
+      if (searchBtn && searchIcon) {
+        searchBtn.disabled = false;
+        searchIcon.className = "fas fa-search";
+      }
+    }
+  }
+
+  // Xuất ra window để nút định vị trong _search_form có thể gọi
+  window.fetchWeather = fetchWeather;
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchForm = document.getElementById("weather-search-form");
+    if (searchForm) {
+      searchForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const searchInput = document.getElementById("weather-search-input");
+        const city = searchInput ? searchInput.value.trim() : "";
+        if (!city) {
+          if (searchInput) searchInput.focus();
+          return;
+        }
+        fetchWeather({ city: city });
+      });
+    }
+
+    window.addEventListener("popstate", function(e) {
+      const params = new URLSearchParams(window.location.search);
+      const city = params.get("city");
+      const lat = params.get("lat");
+      const lon = params.get("lon");
+      const searchInput = document.getElementById("weather-search-input");
+
+      if (city) {
+        if (searchInput) searchInput.value = city;
+        fetchWeather({ city: city }, false);
+      } else if (lat && lon) {
+        fetchWeather({ lat: lat, lon: lon }, false);
+      } else {
+        if (searchInput) searchInput.value = "";
+        fetchWeather({}, false);
+      }
+    });
+  });
+
+  document.addEventListener("click", function(e) {
+    const recentLink = e.target.closest(".recent-list a");
+    if (recentLink) {
+      e.preventDefault();
+      const url = new URL(recentLink.href, window.location.origin);
+      const city = url.searchParams.get("city");
+      if (city) {
+        const searchInput = document.getElementById("weather-search-input");
+        if (searchInput) searchInput.value = city;
+        fetchWeather({ city: city });
+      }
+      return;
+    }
+
+    const favTag = e.target.closest(".favorite-tags .tag");
+    if (favTag && favTag.textContent.trim() && favTag.textContent.trim() !== "Chưa có thành phố yêu thích") {
+      const city = favTag.textContent.trim();
+      const searchInput = document.getElementById("weather-search-input");
+      if (searchInput) searchInput.value = city;
+      fetchWeather({ city: city });
+      return;
+    }
+  });
+
+  document.addEventListener("click", async function(e) {
+    const favBtn = e.target.closest("#js-fav-btn");
+    if (!favBtn) return;
     e.preventDefault();
 
-    const city = this.dataset.city;
-    let favId = this.dataset.favId;
-    const isFavorite = this.classList.contains("is-favorite");
+    const city = favBtn.dataset.city;
+    let favId = favBtn.dataset.favId;
+    const isFavorite = favBtn.classList.contains("is-favorite");
 
-    const heartIcon = this.querySelector("i");
+    const heartIcon = favBtn.querySelector("i");
     const favText = document.getElementById("js-fav-text");
 
     if (isFavorite) {
-      this.classList.remove("is-favorite");
-      heartIcon.className = "far fa-heart";
-      heartIcon.style.color = "#64748b";
+      favBtn.classList.remove("is-favorite");
+      if (heartIcon) {
+        heartIcon.className = "far fa-heart";
+        heartIcon.style.color = "#94a3b8";
+      }
       if (favText) favText.innerText = "Thêm vào yêu thích";
     } else {
-      this.classList.add("is-favorite");
-      heartIcon.className = "fas fa-heart";
-      heartIcon.style.color = "#ef4444";
+      favBtn.classList.add("is-favorite");
+      if (heartIcon) {
+        heartIcon.className = "fas fa-heart";
+        heartIcon.style.color = "#ef4444";
+      }
       if (favText) favText.innerText = "Đã yêu thích";
     }
 
@@ -74,16 +212,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (data.success) {
         if (data.action === "created") {
-          this.dataset.favId = data.favorite_id;
+          favBtn.dataset.favId = data.favorite_id;
         } else if (data.action === "destroyed") {
-          this.dataset.favId = "";
+          favBtn.dataset.favId = "";
         }
       } else {
         alert(data.error || "Có lỗi xảy ra");
+        if (isFavorite) {
+          favBtn.classList.add("is-favorite");
+          if (heartIcon) {
+            heartIcon.className = "fas fa-heart";
+            heartIcon.style.color = "#ef4444";
+          }
+        } else {
+          favBtn.classList.remove("is-favorite");
+          if (heartIcon) {
+            heartIcon.className = "far fa-heart";
+            heartIcon.style.color = "#94a3b8";
+          }
+        }
       }
     } catch (err) {
       console.error("Lỗi kết nối:", err);
     }
   });
-});
+})();
 </script>
