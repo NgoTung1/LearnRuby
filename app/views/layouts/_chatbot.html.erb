@@ -17,11 +17,27 @@
     <div class="chat-msg bot">
       Xin chào! Tôi là <b>Weather Bot</b>. Hãy hỏi tôi về thời tiết bất kỳ thành phố nào nhé!
       <br>Ví dụ: <i>"Hà Nội hôm nay có mưa không?"</i>
+      <br><br>📷 <b>AI Stylist:</b> Gửi ảnh trang phục để nhận lời khuyên phù hợp thời tiết!
     </div>
+  </div>
+
+  <!-- Image preview area -->
+  <div class="chatbot-image-preview" id="chatbot-image-preview" style="display: none;">
+    <div class="preview-container">
+      <img id="preview-img" src="" alt="Preview">
+      <button class="preview-remove" id="preview-remove" title="Xóa ảnh">
+        <i class="fas fa-times-circle"></i>
+      </button>
+    </div>
+    <span class="preview-label">Ảnh sẽ được gửi để phân tích trang phục</span>
   </div>
 
   <div class="chatbot-input-area">
     <input type="text" id="chatbot-input" placeholder="Hỏi về thời tiết..." autocomplete="off">
+    <input type="file" id="chatbot-file-input" accept="image/*" style="display: none;">
+    <button id="chatbot-upload-btn" title="Gửi ảnh trang phục">
+      <i class="fas fa-camera"></i>
+    </button>
     <button id="chatbot-send"><i class="fas fa-paper-plane"></i></button>
   </div>
 </div>
@@ -34,26 +50,65 @@
   const messagesDiv = document.getElementById('chatbot-messages');
   const inputField  = document.getElementById('chatbot-input');
   const sendBtn     = document.getElementById('chatbot-send');
+  const uploadBtn   = document.getElementById('chatbot-upload-btn');
+  const fileInput   = document.getElementById('chatbot-file-input');
+  const imagePreview  = document.getElementById('chatbot-image-preview');
+  const previewImg    = document.getElementById('preview-img');
+  const previewRemove = document.getElementById('preview-remove');
 
   const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  let selectedFile = null;
 
+  // ===== Toggle =====
   toggleBtn.addEventListener('click', function() {
     chatWindow.classList.toggle('open');
-    if (chatWindow.classList.contains('open')) {
-      inputField.focus();
-    }
+    if (chatWindow.classList.contains('open')) inputField.focus();
   });
   closeBtn.addEventListener('click', function() {
     chatWindow.classList.remove('open');
   });
 
+  // ===== Helpers =====
   function addMessage(text, sender) {
     const msgDiv = document.createElement('div');
     msgDiv.classList.add('chat-msg', sender);
     msgDiv.innerHTML = text;
     messagesDiv.appendChild(msgDiv);
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;  
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
     return msgDiv;
+  }
+
+  function addImageMessage(file) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('chat-msg', 'user', 'image-msg');
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    img.alt = 'Ảnh trang phục';
+    img.classList.add('chat-image');
+    const label = document.createElement('div');
+    label.classList.add('chat-image-label');
+    label.innerHTML = '<i class="fas fa-tshirt"></i> Phân tích trang phục';
+    msgDiv.appendChild(img);
+    msgDiv.appendChild(label);
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    return msgDiv;
+  }
+
+  function addAnnotatedImage(base64Data) {
+    const msgDiv = document.createElement('div');
+    msgDiv.classList.add('chat-msg', 'bot', 'image-msg');
+    const img = document.createElement('img');
+    img.src = 'data:image/jpeg;base64,' + base64Data;
+    img.alt = 'Kết quả nhận diện';
+    img.classList.add('chat-image', 'annotated');
+    const label = document.createElement('div');
+    label.classList.add('chat-image-label', 'annotated-label');
+    label.innerHTML = '<i class="fas fa-eye"></i> Kết quả nhận diện AI';
+    msgDiv.appendChild(img);
+    msgDiv.appendChild(label);
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
   }
 
   function showTyping() {
@@ -74,53 +129,131 @@
     return searchInput ? searchInput.value : '';
   }
 
+  // ===== Image upload =====
+  uploadBtn.addEventListener('click', function() { fileInput.click(); });
+
+  fileInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      addMessage('⚠️ Vui lòng chọn file ảnh.', 'bot');
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      addMessage('⚠️ Ảnh quá lớn! Tối đa 10MB.', 'bot');
+      return;
+    }
+    selectedFile = file;
+    previewImg.src = URL.createObjectURL(file);
+    imagePreview.style.display = 'flex';
+    this.value = '';
+  });
+
+  previewRemove.addEventListener('click', clearImagePreview);
+
+  function clearImagePreview() {
+    selectedFile = null;
+    imagePreview.style.display = 'none';
+    previewImg.src = '';
+  }
+
+  // ===== Send text =====
   async function sendMessage() {
+    if (selectedFile) { await sendImageMessage(); return; }
+
     const message = inputField.value.trim();
     if (!message) return;
 
     addMessage(message, 'user');
     inputField.value = '';
     sendBtn.disabled = true;
-
+    uploadBtn.disabled = true;
     showTyping();
 
     try {
       const response = await fetch('/chatbot/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken
-        },
-        body: JSON.stringify({
-          message: message,
-          current_city: getCurrentCity()
-        })
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrfToken },
+        body: JSON.stringify({ message: message, current_city: getCurrentCity() })
+      });
+      removeTyping();
+      if (response.ok) {
+        const data = await response.json();
+        addMessage(data.reply || 'Xin lỗi, có lỗi xảy ra.', 'bot');
+      } else {
+        addMessage('❌ Lỗi kết nối server.', 'bot');
+      }
+    } catch (err) {
+      removeTyping();
+      addMessage('❌ Không thể kết nối.', 'bot');
+    }
+
+    sendBtn.disabled = false;
+    uploadBtn.disabled = false;
+    inputField.focus();
+  }
+
+  // ===== Send image =====
+  async function sendImageMessage() {
+    const file = selectedFile;
+    clearImagePreview();
+    addImageMessage(file);
+
+    sendBtn.disabled = true;
+    uploadBtn.disabled = true;
+    inputField.disabled = true;
+    showTyping();
+
+    try {
+      const formData = new FormData();
+      formData.append('image', file);
+      formData.append('current_city', getCurrentCity());
+
+      const response = await fetch('/chatbot/analyze_outfit', {
+        method: 'POST',
+        headers: { 'X-CSRF-Token': csrfToken },
+        body: formData
       });
 
       removeTyping();
 
       if (response.ok) {
         const data = await response.json();
-        addMessage(data.reply || 'Xin lỗi, có lỗi xảy ra.', 'bot');
+
+        // 1. Hiển thị ảnh annotated (có bounding box)
+        if (data.annotated_image) {
+          addAnnotatedImage(data.annotated_image);
+        }
+
+        // 2. Hiển thị detected items + lời khuyên
+        let reply = data.reply || 'Xin lỗi, có lỗi xảy ra.';
+
+        if (data.detected_items && data.detected_items.length > 0) {
+          const tags = data.detected_items.map(item =>
+            '<span class="detected-tag">' + item + '</span>'
+          ).join(' ');
+          reply = '<div class="detected-items">🔍 Nhận diện: ' + tags + '</div>' + reply;
+        }
+
+        addMessage(reply, 'bot');
       } else {
-        addMessage(' Lỗi kết nối server, vui lòng thử lại.', 'bot');
+        addMessage('❌ Lỗi phân tích ảnh.', 'bot');
       }
     } catch (err) {
       removeTyping();
-      addMessage(' Không thể kết nối, kiểm tra mạng và thử lại.', 'bot');
+      addMessage('❌ Không thể kết nối AI.', 'bot');
     }
 
     sendBtn.disabled = false;
+    uploadBtn.disabled = false;
+    inputField.disabled = false;
     inputField.focus();
   }
 
+  // ===== Events =====
   sendBtn.addEventListener('click', sendMessage);
-
   inputField.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      sendMessage();
-    }
+    if (e.key === 'Enter') { e.preventDefault(); sendMessage(); }
   });
 })();
 </script>

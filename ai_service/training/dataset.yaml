@@ -1,0 +1,28 @@
+# DeepFashion2 Dataset Configuration for YOLOv8
+# 13 clothing categories
+
+# Đường dẫn tới dataset đã convert sang YOLO format
+# Chạy convert_deepfashion2.py trước để tạo thư mục này
+path: ./datasets/deepfashion2_yolo
+
+train: images/train
+val: images/validation
+
+# Số lượng class
+nc: 13
+
+# Tên các class (0-indexed, mapping từ DeepFashion2 category_id - 1)
+names:
+  0: short_sleeve_top
+  1: long_sleeve_top
+  2: short_sleeve_outwear
+  3: long_sleeve_outwear
+  4: vest
+  5: sling
+  6: shorts
+  7: trousers
+  8: skirt
+  9: short_sleeve_dress
+  10: long_sleeve_dress
+  11: vest_dress
+  12: sling_dress

@@ -1,0 +1,2 @@
+# Thư mục chứa model weights
+# Copy file best.pt từ training vào đây với tên: clothing_yolov8.pt

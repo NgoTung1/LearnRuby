@@ -25,5 +25,6 @@ Rails.application.routes.draw do
   delete 'favorites/:id', to: 'favourites#destroy', as: 'destroy_favorite'
 
    post 'chatbot/chat', to: 'chatbots#chat'
+   post 'chatbot/analyze_outfit', to: 'chatbots#analyze_outfit'
 
 end

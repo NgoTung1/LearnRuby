@@ -8,6 +8,17 @@ services:
       MYSQL_ROOT_PASSWORD: password
     ports:
       - "3308:3306"
+
+  ai_api:
+    build: ./ai_service
+    command: uvicorn app:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./ai_service/models:/app/models
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=models/clothing_yolov8.pt
+
   web:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
@@ -17,3 +28,4 @@ services:
       - "3000:3000"
     depends_on:
       - db
+      - ai_api
