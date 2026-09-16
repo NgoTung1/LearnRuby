@@ -5,7 +5,7 @@ class OutfitAnalysisService
   end
 
   def call
-    # Bước 1: Gửi ảnh → AI Service (two-stage pipeline)
+    # Bước 1: Gửi ảnh → AI Service 
     detection_result = ClothingDetectionService.new(@image_file).call
 
     unless detection_result[:success]
@@ -98,6 +98,7 @@ class OutfitAnalysisService
       3. Đưa ra gợi ý cụ thể: nên thêm/bớt gì, mang theo phụ kiện gì.
       4. Ngắn gọn, tối đa 4-5 câu. Sử dụng emoji.
       5. KHÔNG bịa số liệu thời tiết.
+      6. CHỈ in ra câu trả lời trực tiếp cho người dùng, KHÔNG in ra quá trình suy nghĩ (chain-of-thought) hay bất kỳ checklist tự kiểm tra nào.
 
       TRANG PHỤC PHÁT HIỆN TỪ ẢNH:
       #{clothing_list}

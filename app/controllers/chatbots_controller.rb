@@ -7,7 +7,7 @@ class ChatbotsController < ApplicationController
       render json: { success: false, reply: "Vui lòng nhập câu hỏi!" } and return
     end
 
-    if message.length > 500
+    if message.length > 600
       render json: { success: false, reply: "Câu hỏi quá dài, vui lòng rút gọn lại!" } and return
     end
 

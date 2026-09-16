@@ -1,6 +1,6 @@
 """
 evaluate.py — Đánh giá toàn diện model Clothing Detection & Classification
-Tạo ra các báo cáo + biểu đồ để phân tích hiệu suất (giống bài Garbage).
+Tạo ra các báo cáo + biểu đồ để phân tích hiệu suất.
 
 Hỗ trợ:
   1. Evaluate ResNet50 Classifier → Confusion Matrix + Classification Report
@@ -46,7 +46,7 @@ from sklearn.metrics import (
 # ──────────────────────────────────────────────────────────────────────────────
 
 def load_classifier_model(weights_path, device):
-    """Tải ResNet50 classifier (xử lý DataParallel prefix — giống bài Garbage)."""
+    """Tải ResNet50 classifier (xử lý DataParallel prefix)."""
     print(f"[*] Đang tải classifier: {weights_path}")
     state = torch.load(weights_path, map_location=device, weights_only=False)
 
@@ -73,7 +73,7 @@ def load_classifier_model(weights_path, device):
 
 
 def get_val_loader(data_dir, batch_size=32):
-    """Tạo validation dataloader (giống bài Garbage — data_loader.py)."""
+    """Tạo validation dataloader"""
     val_transform = transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),
@@ -92,7 +92,7 @@ def get_val_loader(data_dir, batch_size=32):
 
 
 def evaluate_classifier(model, dataloader, device):
-    """Chạy inference trên toàn bộ validation set (giống bài Garbage — evaluate.py)."""
+    """Chạy inference trên toàn bộ validation set."""
     model.eval()
     all_preds = []
     all_labels = []
@@ -117,7 +117,7 @@ def evaluate_classifier(model, dataloader, device):
 
 
 def plot_confusion_matrix(y_true, y_pred, classes, save_path):
-    """Vẽ Confusion Matrix bằng seaborn heatmap (giống bài Garbage)."""
+    """Vẽ Confusion Matrix bằng seaborn heatmap."""
     cm = confusion_matrix(y_true, y_pred)
 
     # Normalize (%)

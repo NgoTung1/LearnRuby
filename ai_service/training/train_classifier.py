@@ -1,6 +1,5 @@
 """
 Train ResNet50 Clothing Classifier (Stage 2)
-Pipeline giống bài Garbage Classification:
   - Transfer Learning: ResNet50 pretrained ImageNet
   - Freeze backbone, chỉ train layer4 + fc
   - Label Smoothing + CosineAnnealingLR + AdamW
@@ -34,7 +33,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Data Loading (giống bài Garbage — data_loader.py)
+# Data Loading 
 # ──────────────────────────────────────────────────────────────────────────────
 def get_data_loaders(data_dir, batch_size=32):
     data_transforms = {
@@ -137,7 +136,7 @@ def train_model(model, dataloaders, dataset_sizes, criterion, optimizer,
 
 
 # ──────────────────────────────────────────────────────────────────────────────
-# Evaluation (giống bài Garbage — evaluate.py)
+# Evaluation
 # ──────────────────────────────────────────────────────────────────────────────
 def evaluate_model(model, dataloader, device):
     model.eval()
@@ -214,11 +213,11 @@ def main():
     for phase in ["train", "val"]:
         print(f"    {phase}: {dataset_sizes[phase]} images")
 
-    # ── Model (giống bài Garbage — main.py) ──
+    # ── Model  ──
     model = resnet50(weights=ResNet50_Weights.DEFAULT)
     model.fc = nn.Linear(model.fc.in_features, num_classes)
 
-    # Freeze backbone, chỉ train layer4 + fc (giống bài Garbage)
+    # Freeze backbone, chỉ train layer4 + fc 
     for param in model.parameters():
         param.requires_grad = False
     for name, param in model.named_parameters():
@@ -231,7 +230,7 @@ def main():
 
     model = model.to(device)
 
-    # ── Loss + Optimizer (giống bài Garbage) ──
+    # ── Loss + Optimizer ──
     criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
     optimizer = optim.AdamW(
         filter(lambda p: p.requires_grad, model.parameters()),
