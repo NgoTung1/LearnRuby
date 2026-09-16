@@ -21,7 +21,7 @@ class OtpsController < ApplicationController
       redirect_to login_path, notice: "Hết phiên đăng nhập, vui lòng đăng nhập lại."
     elsif @user.resend_otp? == true
       @user.generate_otp!
-      flash.now[:alert] = "Đã gửi lại OTP."
+      flash.now[:notice] = "Đã gửi lại OTP."
       render :new
     else
       flash.now[:alert] = "Vui lòng chờ 2 phút trước khi gửi lại"

@@ -2,6 +2,11 @@ class FavouritesController < ApplicationController
   before_action :require_verified_user
 
   def index
+    unless logged_in?
+      redirect_to login_path, alert: "Bạn không thể sử dụng tính năng này khi chưa đăng nhập"
+      return
+    end
+
     @favorite_weathers = current_user.favorites.order(created_at: :desc).map do |fav|
       weather_res = WeatherApiService.fetch_cached(fav.city_name)
       {
@@ -13,6 +18,11 @@ class FavouritesController < ApplicationController
   end
 
   def create
+    unless logged_in?
+      render json: { success: false, error: "Bạn chưa đăng nhập" }, status: :unauthorized
+      return
+    end
+
     city_name = params[:city_name]
     favorite = current_user.favorites.find_or_initialize_by(city_name: city_name)
 
@@ -24,6 +34,14 @@ class FavouritesController < ApplicationController
   end
 
   def destroy
+    unless logged_in?
+      respond_to do |format|
+        format.json { render json: { success: false, error: "Bạn chưa đăng nhập" }, status: :unauthorized }
+        format.html { redirect_to login_path, alert: "Bạn chưa đăng nhập" }
+      end
+      return
+    end
+
     favorite = current_user.favorites.find_by(id: params[:id])
 
     if favorite

@@ -1,5 +1,5 @@
 class UserMailer < ApplicationMailer  
-  default from: 'Weather on Rails <no-reply@wor.com>'
+  default from: ENV.fetch('MAIL_FROM') { ENV['BREVO_USERNAME'] || ENV['GMAIL'] || 'no-reply@weather-on-rails.com' }
 
   def otp_email(user)
     @user = user

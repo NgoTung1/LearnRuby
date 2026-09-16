@@ -4,11 +4,11 @@
     <h2>Nhập tên thành phố để tra cứu thời tiết</h2>
   </div>
 
-  <%= form_with url: root_path, method: :get, local: true, class: 'search-form' do |form| %>
+  <%= form_with url: root_path, method: :get, local: true, class: 'search-form', id: 'weather-search-form' do |form| %>
     <div class="input-group">
-      <%= form.text_field :city, value: params[:city], placeholder: "Nhập tên thành phố", class: 'search-input' %>
-      <%= form.button type: "submit", class: 'btn-search' do %>
-        <i class="fas fa-search"></i>
+      <%= form.text_field :city, value: params[:city], placeholder: "Nhập tên thành phố", class: 'search-input', id: 'weather-search-input', autocomplete: 'off' %>
+      <%= form.button type: "submit", class: 'btn-search', id: 'weather-search-btn' do %>
+        <i class="fas fa-search" id="weather-search-icon"></i>
       <% end %>
     </div>
   <% end %>
@@ -32,8 +32,19 @@
       locationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xác định vị trí...';
       locationBtn.disabled = true;
 
-      const redirectToWeather = (lat, lon) => {
-        window.location.href = `/?lat=${lat}&lon=${lon}`;
+      const loadWeather = async (lat, lon) => {
+        try {
+          if (typeof window.fetchWeather === 'function') {
+            await window.fetchWeather({ lat, lon });
+          } else {
+            window.location.href = `/?lat=${lat}&lon=${lon}`;
+          }
+        } catch (err) {
+          console.error("Lỗi khi tải thời tiết theo vị trí:", err);
+        } finally {
+          locationBtn.innerHTML = originalText;
+          locationBtn.disabled = false;
+        }
       };
 
       const fetchByIP = async () => {
@@ -41,7 +52,7 @@
           const res = await fetch("https://ipwho.is/");
           const data = await res.json();
           if (data.success && data.latitude && data.longitude) {
-            redirectToWeather(data.latitude, data.longitude);
+            await loadWeather(data.latitude, data.longitude);
           } else {
             alert("Không thể định vị được vị trí qua IP.");
             locationBtn.innerHTML = originalText;
@@ -56,8 +67,8 @@
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          (position) => {
-            redirectToWeather(position.coords.latitude, position.coords.longitude);
+          async (position) => {
+            await loadWeather(position.coords.latitude, position.coords.longitude);
           },
           (error) => {
             console.warn("GPS bị chặn/timeout, tự động chuyển sang IP...", error.message);
