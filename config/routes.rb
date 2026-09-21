@@ -27,4 +27,7 @@ Rails.application.routes.draw do
    post 'chatbot/chat', to: 'chatbots#chat'
    post 'chatbot/analyze_outfit', to: 'chatbots#analyze_outfit'
 
+   get 'ai_stylist', to: 'ai_stylists#index'
+   post 'ai_stylist/analyze', to: 'ai_stylists#analyze'
+
 end

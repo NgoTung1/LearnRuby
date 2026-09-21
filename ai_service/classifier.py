@@ -1,6 +1,5 @@
 """
 classifier.py — ResNet50 Clothing Classifier (Stage 2)
-Kiến trúc mirror từ project Garbage Classification:
   - ResNet50 pretrained ImageNet → fine-tune fc layer (13 clothing classes)
   - Singleton pattern, CUDA/CPU fallback
   - Xử lý tự động prefix 'module.' từ DataParallel training
@@ -72,7 +71,7 @@ _device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def _build_transform():
-    """Pipeline tiền xử lý ảnh cho ResNet50 (giống bài Garbage)."""
+    """Pipeline tiền xử lý ảnh cho ResNet50."""
     return transforms.Compose([
         transforms.Resize(256),
         transforms.CenterCrop(224),

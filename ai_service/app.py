@@ -23,7 +23,7 @@ from classifier import (
 
 app = FastAPI(
     title="Clothing Detection API — Two-Stage Pipeline",
-    description="YOLOv8 Detector → ResNet50 Classifier (mirror Garbage Classification architecture)",
+    description="YOLOv8 Detector → ResNet50 Classifier",
     version="2.0.0",
 )
 

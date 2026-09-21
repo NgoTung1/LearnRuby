@@ -1,0 +1,204 @@
+<% content_for :title, "Trợ lý AI Phối đồ" %>
+<% content_for :extra_css do %>
+  <%= stylesheet_link_tag 'ai_stylist', media: 'all' %>
+<% end %>
+
+<div class="ai-stylist-container">
+  <!-- Cột Upload Ảnh -->
+  <div class="upload-section">
+    <h2 class="section-title"><i class="fas fa-camera"></i> Tải ảnh trang phục</h2>
+    
+    <div class="upload-area" id="upload-area">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <h3>Kéo thả ảnh vào đây</h3>
+      <p>Hoặc click để chọn file từ thiết bị</p>
+      <input type="file" id="image-input" accept="image/*" style="display: none;">
+    </div>
+
+    <div id="image-preview-container">
+      <img id="image-preview" src="" alt="Preview">
+      <button class="analyze-btn" id="analyze-btn">
+        <i class="fas fa-magic"></i> Bắt đầu phân tích AI
+      </button>
+    </div>
+  </div>
+
+  <!-- Cột Kết quả AI -->
+  <div class="result-section">
+    <h2 class="section-title"><i class="fas fa-robot"></i> Kết quả phân tích</h2>
+    
+    <!-- Trạng thái chờ -->
+    <div class="empty-state" id="empty-state">
+      <i class="fas fa-tshirt"></i>
+      <p>Hãy tải lên một bức ảnh để AI tư vấn phối đồ cho bạn theo thời tiết hôm nay nhé!</p>
+    </div>
+
+    <!-- Hiệu ứng Loading -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="spinner"></div>
+      <p>AI đang quét và phân tích dữ liệu thời tiết...</p>
+    </div>
+
+    <!-- Nội dung kết quả -->
+    <div id="result-content">
+      <div class="ai-advice" id="ai-advice">
+        <!-- Lời khuyên sẽ hiện ở đây -->
+      </div>
+      
+      <div>
+        <strong><i class="fas fa-tags"></i> Hệ thống nhận diện:</strong>
+        <div class="detected-tags" id="detected-tags">
+          <!-- Tags sẽ hiện ở đây -->
+        </div>
+      </div>
+
+      <div class="result-image">
+        <img id="annotated-image" src="" alt="Annotated Image">
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const uploadArea = document.getElementById('upload-area');
+  const imageInput = document.getElementById('image-input');
+  const previewContainer = document.getElementById('image-preview-container');
+  const imagePreview = document.getElementById('image-preview');
+  const analyzeBtn = document.getElementById('analyze-btn');
+  
+  const emptyState = document.getElementById('empty-state');
+  const loadingOverlay = document.getElementById('loading-overlay');
+  const resultContent = document.getElementById('result-content');
+  const aiAdvice = document.getElementById('ai-advice');
+  const detectedTags = document.getElementById('detected-tags');
+  const annotatedImage = document.getElementById('annotated-image');
+  
+  let selectedFile = null;
+
+  // Xử lý Click để chọn ảnh
+  uploadArea.addEventListener('click', () => imageInput.click());
+
+  imageInput.addEventListener('change', function(e) {
+    handleFiles(this.files);
+  });
+
+  // Xử lý Kéo thả (Drag & Drop)
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+  });
+
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.classList.remove('dragover');
+  });
+
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+
+  function handleFiles(files) {
+    if (files.length === 0) return;
+    const file = files[0];
+    
+    if (!file.type.startsWith('image/')) {
+      alert("Vui lòng chọn file hình ảnh!");
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Kích thước ảnh tối đa là 10MB!");
+      return;
+    }
+
+    selectedFile = file;
+    
+    // Hiển thị preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      imagePreview.src = e.target.result;
+      uploadArea.style.display = 'none';
+      previewContainer.style.display = 'block';
+      analyzeBtn.style.display = 'block';
+      
+      // Reset cột kết quả
+      emptyState.style.display = 'block';
+      resultContent.style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // Xử lý nút Phân tích
+  analyzeBtn.addEventListener('click', async function() {
+    if (!selectedFile) return;
+
+    // Giao diện loading
+    analyzeBtn.disabled = true;
+    analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang phân tích...';
+    emptyState.style.display = 'none';
+    resultContent.style.display = 'none';
+    loadingOverlay.style.display = 'flex';
+
+    const formData = new FormData();
+    formData.append('image', selectedFile);
+    
+    // Lấy thành phố từ input tìm kiếm thời tiết hiện tại nếu có, hoặc dùng mặc định
+    const cityInput = document.querySelector('input[name="city"]');
+    if (cityInput && cityInput.value) {
+      formData.append('city', cityInput.value);
+    }
+
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+
+    try {
+      const response = await fetch('/ai_stylist/analyze', {
+        method: 'POST',
+        headers: { 'X-CSRF-Token': csrfToken },
+        body: formData
+      });
+
+      const data = await response.json();
+      loadingOverlay.style.display = 'none';
+
+      if (data.success) {
+        resultContent.style.display = 'flex';
+        
+        // Cập nhật lời khuyên
+        aiAdvice.innerHTML = data.reply.replace(/\n/g, '<br>');
+        
+        // Cập nhật tags
+        detectedTags.innerHTML = '';
+        if (data.detected_items && data.detected_items.length > 0) {
+          data.detected_items.forEach(item => {
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.textContent = item;
+            detectedTags.appendChild(span);
+          });
+        } else {
+          detectedTags.innerHTML = '<span class="tag">Không nhận diện được món đồ nào rõ ràng</span>';
+        }
+        
+        // Cập nhật ảnh có bounding box
+        if (data.annotated_image) {
+          annotatedImage.src = 'data:image/jpeg;base64,' + data.annotated_image;
+        } else {
+          annotatedImage.src = imagePreview.src; // Fallback
+        }
+        
+      } else {
+        emptyState.style.display = 'block';
+        alert("Lỗi: " + (data.error || "Không thể phân tích ảnh"));
+      }
+    } catch (err) {
+      loadingOverlay.style.display = 'none';
+      emptyState.style.display = 'block';
+      alert("Đã xảy ra lỗi kết nối mạng!");
+    } finally {
+      analyzeBtn.disabled = false;
+      analyzeBtn.innerHTML = '<i class="fas fa-magic"></i> Phân tích lại';
+    }
+  });
+});
+</script>

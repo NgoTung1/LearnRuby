@@ -68,11 +68,11 @@ class OutfitAnalysisService
       "- #{d['class_vi']} (#{d['class']}, độ tin cậy: #{(conf * 100).round}%, mức giữ ấm: #{d['warmth']})"
     end.join("\n")
 
-    if weather_result[:success] && weather_result[:data].present?
-      data = weather_result[:data]
-      main = data['main'] || {}
-      weather_info = data['weather']&.first || {}
-      wind = data['wind'] || {}
+    if weather_result[:success] && weather_result[:current].present?
+      current = weather_result[:current]
+      main = current['main'] || {}
+      weather_info = current['weather']&.first || {}
+      wind = current['wind'] || {}
 
       weather_context = <<~CONTEXT
         DỮ LIỆU THỜI TIẾT THỰC TẾ TẠI #{@current_city.upcase}:
