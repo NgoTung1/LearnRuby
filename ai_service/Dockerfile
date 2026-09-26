@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+﻿FROM python:3.10-slim
 
 # Install system dependencies for OpenCV
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -15,6 +15,8 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN pip install huggingface-hub
+
 # Copy application code
 COPY . .
 
@@ -22,5 +24,6 @@ COPY . .
 RUN mkdir -p models
 
 EXPOSE 8000
+EXPOSE 7860
 
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
