@@ -17,6 +17,7 @@
 * **Lịch sử tìm kiếm (History):** Tự động lưu và cho phép xem lại danh sách các thành phố đã tra cứu trước đó.
 * **Dự báo và cảnh báo thời tiết qua email:** Tự động gửi cảnh báo thời tiết cực đoan, bất thường và dự báo thời tiết hàng ngày qua email của người dùng
 * **Chatbot hỗ trợ xem thời tiết và gợi ý khi ra đường:** Hỏi đáp với chatbot về nhiệt độ, cảm nhận và nhận những lời khuyên khi di chuyển ra bên ngoài
+* **Trợ lý AI Phối đồ (AI Stylist):** Ứng dụng tích hợp mô hình AI (YOLOv8 + ResNet50) giúp nhận diện trang phục từ ảnh tải lên, phân tích thời tiết hiện tại và đưa ra lời khuyên phối đồ chuẩn xác. Giao diện Drag-and-Drop hiện đại.
 
 ## Giao diện minh họa
 
@@ -43,6 +44,9 @@
 
 ### 8. Chatbot
 ![Modal Chatbot](app/assets/images/chatbot.JPG)
+
+### 9. Trợ lý AI Phối đồ (AI Stylist)
+![Trợ lý AI Phối đồ](app/assets/images/Stylist.png)
 ---
 
 ## Cấu hình Biến Môi Trường (.env)

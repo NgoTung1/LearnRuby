@@ -123,6 +123,12 @@ def annotate_image(image_bgr, detections):
     Vẽ bounding box + label lên ảnh.
     """
     annotated = image_bgr.copy()
+    h, w = annotated.shape[:2]
+    
+    # Tính toán font và độ dày nét vẽ tỷ lệ thuận với kích thước ảnh
+    scale = min(w, h) / 400.0
+    font_scale = max(0.3, 0.5 * scale)
+    thickness = max(1, int(1.5 * scale))
 
     for det in detections:
         x1, y1, x2, y2 = det["bbox"]
@@ -133,26 +139,21 @@ def annotate_image(image_bgr, detections):
         color = CLASS_COLORS.get(label, CLASS_COLORS["default"])
 
         # 1. Vẽ bounding box
-        cv2.rectangle(annotated, (x1, y1), (x2, y2), color, 2)
+        cv2.rectangle(annotated, (x1, y1), (x2, y2), color, thickness)
 
         # 2. Chuẩn bị text
         text = f"{label_vi} ({cls_conf:.0%})"
 
-        # 3. Vẽ nền cho chữ dễ đọc 
-        (tw, th), _ = cv2.getTextSize(
-            text, cv2.FONT_HERSHEY_SIMPLEX, 0.55, 2
-        )
-        cv2.rectangle(
-            annotated,
-            (x1, max(0, y1 - th - 10)),
-            (x1 + tw + 6, y1),
-            color, -1,
-        )
-        cv2.putText(
-            annotated, text,
-            (x1 + 3, y1 - 5),
-            cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 0, 0), 2,
-        )
+        # 3. Kích thước text
+        (tw, th), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, font_scale, thickness)
+        
+        # 4. Vẽ nền và text (tránh bị cắt mất chữ nếu bounding box sát mép trên)
+        if y1 - th - 10 < 0:
+            cv2.rectangle(annotated, (x1, y1), (x1 + tw + 6, y1 + th + 10), color, -1)
+            cv2.putText(annotated, text, (x1 + 3, y1 + th + 5), cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), thickness)
+        else:
+            cv2.rectangle(annotated, (x1, y1 - th - 10), (x1 + tw + 6, y1), color, -1)
+            cv2.putText(annotated, text, (x1 + 3, y1 - 5), cv2.FONT_HERSHEY_SIMPLEX, font_scale, (0, 0, 0), thickness)
 
     return annotated
 

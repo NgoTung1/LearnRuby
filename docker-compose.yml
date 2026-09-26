@@ -11,8 +11,9 @@ services:
 
   ai_api:
     build: ./ai_service
-    command: uvicorn app:app --host 0.0.0.0 --port 8000
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
     volumes:
+      - ./ai_service:/app
       - ./ai_service/models:/app/models
     ports:
       - "8000:8000"

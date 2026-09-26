@@ -15,11 +15,16 @@
       <input type="file" id="image-input" accept="image/*" style="display: none;">
     </div>
 
-    <div id="image-preview-container">
+    <div id="image-preview-container" style="display: none;">
       <img id="image-preview" src="" alt="Preview">
-      <button class="analyze-btn" id="analyze-btn">
-        <i class="fas fa-magic"></i> Bắt đầu phân tích AI
-      </button>
+      <div class="action-buttons">
+        <button class="analyze-btn" id="analyze-btn">
+          <i class="fas fa-magic"></i> Bắt đầu phân tích AI
+        </button>
+        <button class="reselect-btn" id="reselect-btn">
+          <i class="fas fa-redo"></i> Chọn ảnh khác
+        </button>
+      </div>
     </div>
   </div>
 
@@ -27,10 +32,15 @@
   <div class="result-section">
     <h2 class="section-title"><i class="fas fa-robot"></i> Kết quả phân tích</h2>
     
-    <!-- Trạng thái chờ -->
     <div class="empty-state" id="empty-state">
       <i class="fas fa-tshirt"></i>
-      <p>Hãy tải lên một bức ảnh để AI tư vấn phối đồ cho bạn theo thời tiết hôm nay nhé!</p>
+      <h3>Chưa có dữ liệu phân tích</h3>
+      <p style="margin-bottom: 15px;">Hãy tải lên một bức ảnh trang phục của bạn. Hệ thống AI sẽ:</p>
+      <ul style="text-align: left; color: #7f8c8d; display: inline-block; padding-left: 20px;">
+        <li><i class="fas fa-search" style="font-size: 1rem; opacity: 1; margin-right: 5px; color: #3498db;"></i> Nhận diện các món đồ bạn đang mặc</li>
+        <li><i class="fas fa-cloud-sun" style="font-size: 1rem; opacity: 1; margin-right: 5px; color: #e67e22;"></i> Đánh giá thời tiết tại khu vực của bạn</li>
+        <li><i class="fas fa-comment-dots" style="font-size: 1rem; opacity: 1; margin-right: 5px; color: #2ecc71;"></i> Đưa ra lời khuyên phối đồ phù hợp nhất</li>
+      </ul>
     </div>
 
     <!-- Hiệu ứng Loading -->
@@ -66,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const previewContainer = document.getElementById('image-preview-container');
   const imagePreview = document.getElementById('image-preview');
   const analyzeBtn = document.getElementById('analyze-btn');
+  const reselectBtn = document.getElementById('reselect-btn');
   
   const emptyState = document.getElementById('empty-state');
   const loadingOverlay = document.getElementById('loading-overlay');
@@ -78,6 +89,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Xử lý Click để chọn ảnh
   uploadArea.addEventListener('click', () => imageInput.click());
+  reselectBtn.addEventListener('click', () => imageInput.click());
 
   imageInput.addEventListener('change', function(e) {
     handleFiles(this.files);
