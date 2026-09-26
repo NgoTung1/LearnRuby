@@ -31,7 +31,7 @@ def download_weights_if_missing():
     # Kiểm tra và tải ResNet50
     if not os.path.exists("models/resnet50.pth"):
         print("Đang tải ResNet50 từ Hugging Face...")
-        hf_hub_download(repo_id=repo_id, filename="resnet50.pth", local_dir="models")
+        hf_hub_download(repo_id=repo_id, filename="clothing_resnet50.pth", local_dir="models")
 
 # GỌI HÀM NGAY TẠI ĐÂY (TRƯỚC KHI LOAD MODEL)
 download_weights_if_missing()
