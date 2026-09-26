@@ -5,7 +5,8 @@ Clothing Detection API — Two-Stage Pipeline (YOLOv8 + ResNet50)
 
 Output: JSON detections + ảnh annotated (base64) với bounding box + label
 """
-
+from huggingface_hub import hf_hub_download
+import os
 import os
 import io
 import base64
@@ -16,6 +17,24 @@ from fastapi.responses import JSONResponse
 from PIL import Image
 from ultralytics import YOLO
 
+def download_weights_if_missing():
+    os.makedirs("models", exist_ok=True)
+    
+    # THAY DÒNG NÀY BẰNG TÊN REPO CỦA BẠN TRÊN HUGGING FACE
+    repo_id = "Tungnson23/ai-stylists-weights" 
+    
+    # Kiểm tra và tải YOLO
+    if not os.path.exists("models/clothing_yolov8.pt"):
+        print("Đang tải YOLOv8 từ Hugging Face...")
+        hf_hub_download(repo_id=repo_id, filename="clothing_yolov8.pt", local_dir="models")
+        
+    # Kiểm tra và tải ResNet50
+    if not os.path.exists("models/resnet50.pth"):
+        print("Đang tải ResNet50 từ Hugging Face...")
+        hf_hub_download(repo_id=repo_id, filename="resnet50.pth", local_dir="models")
+
+# GỌI HÀM NGAY TẠI ĐÂY (TRƯỚC KHI LOAD MODEL)
+download_weights_if_missing()
 from classifier import (
     load_classifier, classify, is_classifier_loaded,
     CLASS_NAMES_VI, WARMTH_LEVEL,
